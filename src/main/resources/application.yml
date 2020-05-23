@@ -1,0 +1,22 @@
+server:
+  port: ${SERVER_PORT:8445}
+  ssl:
+    key-store: classpath:snowman.p12
+    key-store-password: 123456
+    key-store-type: PKCS12
+
+REDIRECT_URI: https://localhost:8445/
+APP_ID: 325921808404719
+APP_SECRET: 1c2cceb504419f556e4f552b80be199e
+
+
+spring:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/snowman?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+    username: root
+    password: felipe95
+  jpa:
+    hibernate.ddl-auto: update
+    generate-ddl: true
+    show-sql: true

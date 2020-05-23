@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Categorias</title>
+  <link href="../bootstrap.min.css" rel="stylesheet">
+  <link href="../main.css" rel="stylesheet">
+</head>
+<body>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v7.0&appId=325921808404719&autoLogAppEvents=1"></script>
+<div id="header"></div>	
+
+<div class="fb-comments" data-href="https://localhost:8445/categoria/" data-numposts="5" data-width=""></div>
+
+	<!-- Modal para nova categoria  -->
+	<div th:if="${auth}">
+		<button type="button" class="btn btn-primary" data-toggle="modal" style="float:right; margin:20px;"
+			data-target="#newCategoryModal" >Cadastrar Categoria</button>
+		<div class="modal fade" id="newCategoryModal" tabindex="-1"
+			role="dialog" aria-labelledby="newCategoryModalLabel"
+			aria-hidden="true" th:if="${auth}">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="newCategoryModalLabel">Nova
+							Categoria</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form action="/">
+							<div class="form-group">
+								<label for="recipient-name" class="col-form-label">Nome:</label>
+								<input type="text" class="form-control" id="name">
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" id="sendCategory"
+							data-dismiss="modal">Fechar</button>
+						<button type="button" class="btn btn-primary">Salvar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<h3>Ranking top 10 categorias</h3>
+	<table class="table table-bordered table-condensed table-hover">
+		<thead>
+			<tr style="font-weight: bold;">
+				<td>Número de pontos turísticos</td>
+				<td>Categoria</td>
+			</tr>
+
+		</thead>
+		<tbody id="form-list-client-body">
+			<tr th:each="category : ${categories}">
+
+				<td th:text="${category.id}"></td>
+				<td th:text="${category.name}"></td>
+			</tr>
+		</tbody>
+	</table>
+
+
+</body>
+
+
+  <div id="footer"></div>		
+  <!-- Bootstrap core JavaScript -->
+  <script src="../jquery.min.js"></script>
+  <script src="../bootstrap.bundle.min.js"></script>
+   <script type="text/javascript">
+  $(function(){
+      $("#header").load("https://" + window.location.host + "/components/header.html"); 
+      $("#footer").load("https://" + window.location.host + "/components/footer.html");	
+   });
+  </script>
+  
+</html>
