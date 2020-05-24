@@ -85,5 +85,23 @@
     	  modal.find('.modal-body input').val(recipient)
      });
     
+    function showMessage(id, message, time){
+    	$("#" + id).append(message).slideToggle();
+    	setTimeout(function(){
+    		$("#" + id).slideToggle();
+    	}, time);
+    }
+    
+    function validateCategory (){
+    	
+        for(var i =0; i<categories.length; i++){
+        	if (categories[i].name == $("#name").val()){
+        		$("#closeModal").click();
+        		showMessage("error", "Categoria já existe, por favor tente novamente", 5000);
+        		return;
+        	}
+        }
+        $("#saveCategory").click();
+    }    
    
 ;
