@@ -10,7 +10,7 @@ APP_ID: 325921808404719
 APP_SECRET: 1c2cceb504419f556e4f552b80be199e
 
 
-spring:
+spring: 
   datasource:
     driverClassName: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/snowman?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
