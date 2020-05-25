@@ -24,37 +24,8 @@
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
-					</div>
-					<!--  
-					
-					 <form action="#" th:action="@{/categoria}" th:object="${category}" method="post" th:if="${auth}"  >
-					 
-					 	<div class="modal-body">
-							
-								<div class="form-group">
-									<p>Id: <input type="text" th:field="*{id}" style="display:none;" /></p>
-				       				 <p>Name: <input type="text" th:field="*{name}" /></p>
-								</div>
-							
-						</div>
-						<div class="modal-footer">
-							
-							   <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
-						</div>
-					 
-				    	
-				      
-				    </form>
-					
-					-->
-					
-					
-					 
-					<form  th:if="${auth}" 
-					action="#" 
-					th:action="@{/categoria}"  
-					method="post"   
-					th:object="${category}" >
+					</div> 
+					<form  th:if="${auth}"  action="#" th:action="@{/categoria}"  method="post"   th:object="${category}" >
 						<div class="modal-body">
 							
 								<div class="form-group">

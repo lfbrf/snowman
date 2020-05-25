@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 
@@ -33,8 +33,11 @@
 
     <header class="jumbotron my-4">
       <h1 class="display-3">A Warm Welcome!</h1>
-      <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat.</p>
-      <a href="#" class="btn btn-primary btn-lg">Call to action!</a>
+      <p class="lead">Não encontrou seu ponto turístico? Cadastre agora mesmo!</p>
+      <div th:if="${auth}">
+		<button onclick="refreshIdCategory(); initAutocomplete()" type="button" class="btn btn-primary" data-toggle="modal" style="margin:20px;"
+			data-target="#newTouristModal" >Cadastrar Ponto Turístico</button>
+	  </div>
     </header>
  
 
@@ -98,18 +101,229 @@
 
   </div>
   <!-- /.container -->
+  
+
+  
+  <div th:if="${auth}">
+		<div class="modal fade" id="newTouristModal" tabindex="-1"
+			role="dialog" aria-labelledby="newTouristModalLabel"
+			aria-hidden="true" >
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" >Novo ponto Turístico</h5>
+						<button type="button" class="close" data-dismiss="modal" 
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div> 
+					
+					<form   th:if="${auth}"  action="#" th:action="@{/}"  method="post"  th:object="${tourist}"    >
+						<div class="modal-body">
+							
+							   
+							   <div class="form-group">
+							   	<img id='imgTouristUpload'   th:field="*{picture}" /> 
+								</div>
+					           <div class="input-group">
+						            <span class="input-group-btn">
+						                <span class="btn btn-default btn-file">
+						                    Selecione uma Foto <input type="file" id="imgInp">
+						                </span>
+						            </span>
+						            <input type="text" class="form-control" readonly>
+						        </div>
+						        
+							
+								<div class="form-group">
+									<label for="recipient-name" class="col-form-label" >Nome:</label>
+									<input type="text" class="form-control"  th:field="*{name}"    />
+								</div>
+								
+								
+								
+								<div class="form-group">
+									<label for="recipient-name" class="col-form-label">Localização:</label>
+									<input type="text" class="form-control" id="touristLocation"   />									
+									<input type="text" class="form-control" th:field="*{latLocalization}" style="display:none;" />
+									<input type="text" class="form-control" th:field="*{longLocalization}" style="display:none;"  />
+								</div>
+								
+								<div class="form-group">
+									<label for="recipient-name" class="col-form-label">Categoria:</label>
+									<select class="form-control" id="category" name="touristSpotCategories" onchange="refreshIdCategory()" >
+									    <option th:each="categorie : ${touristSpot.categories}"  
+									            th:value="${categorie.id}"
+									            th:text="${categorie.name}">Part name</option>
+									</select>
+									<input type="text" class="form-control" th:field="*{idCategory}" style="display:none;" />
+								</div>
+							
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" id="closeModal" 
+								data-dismiss="modal">Fechar</button>
+							<button type="button" class="btn btn-primary" onclick="newTourist()">Salvar</button>
+							 <input type="submit" value="Submit"  id="saveTourist" style="display:none;"  />
+						</div>
+					</form>
+				
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	
+  
+  
+  
+  
+  
+  
+  
 
   <div id="footer"></div>		
 
   <!-- Bootstrap core JavaScript -->
   <script src="../jquery.min.js"  ></script>
   <script src="../bootstrap.bundle.min.js"></script>
+  
+  
+  
   <script type="text/javascript">
+  function refreshIdCategory(){
+	  //category
+	  $("#idCategory").val($("#category").val());
+  }
+  
+  function checkField(campo){
+	  if ($(campo + "").val() == ""){
+		  showMessage("error", "Faltou preencher um ou mais campos", 6000);
+		  $("#closeModal").click();
+		  return false
+	  }
+	  return true;
+		  
+  }
+  
   $(function(){
       $("#header").load("components/header.html"); 
       $("#footer").load("components/footer.html");	
    });
+  
+  var arrayBuffer;
+  var fileReader = new FileReader();
+  fileReader.onload = function(event) {
+      arrayBuffer = event.target.result;
+      $("#imgTouristUpload").val(arrayBuffer);
+      if (arrayBuffer && arrayBuffer.byteLength !== undefined) 
+      	$("#saveTourist").click();
+  };
+  
+  function newTourist(){
+	  console.log($("#imgTouristUpload").val());
+	// valida campos
+	  if (checkField("imgTouristUpload") && checkField("name") && checkField("latLocalization") 
+			  && checkField("longLocalization") && checkField("longLocalization")){
+		  getBloBytesbFrom64(function(data) {
+			  dt = data;
+			  fileReader.readAsArrayBuffer(data);
+			  
+		    }, $("#imgTouristUpload").val());
+		 
+	  }
+  }
+  $(document).on('change', '.btn-file :file', function() {
+		var input = $(this),
+			label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+		input.trigger('fileselect', [label]);
+		});
+
+		$('.btn-file :file').on('fileselect', function(event, label) {
+		    
+		    var input = $(this).parents('.input-group').find(':text'),
+		        log = label;
+		    
+		    if( input.length ) {
+		        input.val(log);
+		    } else {
+		        if( log ) alert(log);
+		    }
+	    
+	});
+		
+	function readURL(input) {
+		    if (input.files && input.files[0]) {
+		        var reader = new FileReader();
+		        
+		        reader.onload = function (e) {
+		            $('#imgTouristUpload').attr('src', e.target.result);
+		        }
+		        
+		        reader.readAsDataURL(input.files[0]);
+		    }
+		}
+
+		$("#imgInp").change(function(){
+		    readURL(this);
+		}); 
+			
+	
+	function initAutocomplete() {
+		var place = ""; 
+		    autocomplete = new google.maps.places.Autocomplete(
+				(document.getElementById('touristLocation')),
+		        {types: ['geocode']});
+
+		    autocomplete.addListener('place_changed', fillInAddress);
+	}
+	function fillInAddress() {
+		place = autocomplete.getPlace();
+		$("#latLocalization").val(place.geometry.location.lat());
+		$("#longLocalization").val(place.geometry.location.lng());
+     }	
+  
   </script>
+  
+ <style>
+.pac-container {
+    z-index: 1051 !important;
+}
+  .btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+#imgTouristUpload{
+    width: 40%;
+    display: block;
+	margin-left: auto;
+	margin-right: auto 
+}
+  
+  </style>
+  
+  
+  
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCykXMI93ml2s-159-aiOPQh1_dUyoUjsg&libraries=places&callback=initMap"
+        async defer></script>
+  
+  
 </body>
 
 </html>

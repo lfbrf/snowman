@@ -92,7 +92,7 @@
     	}, time);
     }
     
-    function validateCategory (){
+    function validateCategory (){ 
     	
         for(var i =0; i<categories.length; i++){
         	if (categories[i].name == $("#name").val()){
@@ -104,4 +104,18 @@
         $("#saveCategory").click();
     }    
    
+
+    
+    
+    
+    function getBloBytesbFrom64(_callback, b64){
+        fetch(b64).then((response) => {
+    	    console.log(response);
+    	    response.blob().then((data) => {
+    	        console.log( "OK" + data);
+    	         _callback(data);;
+	
+    	    });
+    	});
+    }
 ;

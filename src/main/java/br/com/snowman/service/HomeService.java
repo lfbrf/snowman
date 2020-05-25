@@ -9,6 +9,7 @@ public interface HomeService {
    AccessTokenData inspectAccessToken(String accessToken, String appAccessToken);
    AccessToken getAccessTokenFromCode(String code);
    UserDetails getUserDetailsFromAccessToken(String accessToken);
+   void saveUserIfNotExists(String accessToken, UserDetails userDetails);
    String getAppAccessToken();
    String genCSRF();
 }

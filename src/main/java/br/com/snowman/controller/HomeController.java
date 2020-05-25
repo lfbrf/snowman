@@ -3,6 +3,7 @@ package br.com.snowman.controller;
 import java.io.IOException;
 
 
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,7 +27,6 @@ import br.com.snowman.service.HomeService;
 
 @RestController
 //@Controller
-@RequestMapping("/")
 public class HomeController {
 	
 	@Autowired
@@ -40,6 +39,9 @@ public class HomeController {
 
     private final String REDIRECT_URI;
     private final String APP_ID;
+    
+    
+   
 
     public HomeController(
         @Value("${REDIRECT_URI}") String REDIRECT_URI,
@@ -48,12 +50,13 @@ public class HomeController {
         this.REDIRECT_URI = REDIRECT_URI;
         this.APP_ID = APP_ID;
     }
+    
+    
+    
 
     @GetMapping("/facebook/login")
     public ResponseEntity<?> facebookLogin(@RequestParam("code") String code, @RequestParam("state") String state,
         HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest) throws IOException {
-        // Optional: Verify state (csrf) token
-
         AccessToken accessToken;
         try {
             accessToken = homeService.getAccessTokenFromCode(code);
@@ -95,6 +98,7 @@ public class HomeController {
         session.setAttribute("cookieSession", cookie);
         httpServletResponse.addCookie(cookie);
         httpServletResponse.sendRedirect(REDIRECT_URI);
+        homeService.saveUserIfNotExists(accessToken.getAccess_token(), userDetails);
         return ResponseEntity.ok().build();
     }
 

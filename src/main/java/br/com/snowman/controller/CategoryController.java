@@ -31,12 +31,7 @@ public class CategoryController {
 	@Autowired
 	private HttpServletRequest context;
 	
-	@GetMapping(value={"teste/", "/teste"})
-    public String  teste(Model model) {
-        return "teste";
-    }
-    
-    
+
     @GetMapping(value={"", "/"})
     public String  listCategories(Model model) {
     	model = initCategory(model);

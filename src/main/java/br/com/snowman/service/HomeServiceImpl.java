@@ -20,10 +20,15 @@ import br.com.snowman.domain.AccessToken;
 import br.com.snowman.domain.AccessTokenData;
 import br.com.snowman.domain.Data;
 import br.com.snowman.domain.UserDetails;
+import br.com.snowman.model.User;
+import br.com.snowman.repository.UserRepository;
 @Service
 public class HomeServiceImpl implements HomeService {
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	UserRepository userRepository;
 	
 	@Bean
 	public RestTemplate restTemplate(RestTemplateBuilder builder) {
@@ -123,5 +128,14 @@ public class HomeServiceImpl implements HomeService {
 			LOGGER.warn(exception.getResponseBodyAsString());
 			throw new RuntimeException(String.valueOf(exception.getStatusCode()));
 		}
+	}
+
+	@Override
+	public void saveUserIfNotExists(String accessToken, UserDetails userDetails) {
+		User u = userRepository.finUserById(userDetails.getId());
+		if (u != null && u.getName() != null) 
+			return ;
+		else
+			userRepository.save(new User(userDetails.getName(), userDetails.getEmail(), userDetails.getId(), true));
 	}
 }
