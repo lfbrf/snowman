@@ -1,6 +1,7 @@
 package br.com.snowman.controller;
 
 
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,14 +17,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import br.com.snowm.dao.TouristSpotDao;
+import br.com.snowman.dao.TouristSpotDao;
+import br.com.snowman.domain.UserDetails;
 import br.com.snowman.model.Category;
 import br.com.snowman.model.TouristSpot;
 import br.com.snowman.model.User;
 import br.com.snowman.repository.CategoryRepository;
 import br.com.snowman.repository.TouristSpotRepository;
+import br.com.snowman.repository.UserRepository;
 import br.com.snowman.service.HomeService;
 
 @Controller
@@ -40,46 +42,88 @@ public class TouristSpotController {
     TouristSpotRepository touristSpotRepository;
 	
 	@Autowired
+    UserRepository userRepository;
+	
+	@Autowired
 	private HttpServletRequest context;
 	
 
     @GetMapping(value={"", "/"})
     public String  listCategories(Model model) {
-    	model.addAttribute("auth", isAuthenticated());
-    	TouristSpot touristSpot = new TouristSpot();
-    	Set<Category> allCategories = new HashSet<Category>(categoryRepository.findAll());
-    	touristSpot.setCategories( allCategories);
-    	TouristSpotDao touristSpotDao = new TouristSpotDao();
-    	// Pego o usuário atual
-    	model.addAttribute("touristSpot", touristSpot);
-    	model.addAttribute("tourist", touristSpotDao);
+    	
+    	model = initModel(model);
+    	
         return "index";
     }
     
-    @PostMapping(value={"", "/"})
-    public @ResponseBody  String createCategory( @Valid @ModelAttribute("tourist") TouristSpotDao touristSpot, Model model) {
+    @GetMapping(value= "/turistico/*")
+    public String  listC(Model model, HttpServletRequest request) {
+    	System.out.println("ENTRA AQUI ++++++++ ");
+    	System.out.println(request.getRequestURL().toString() );
+    	System.out.println("---------------");
+    	System.out.println(request.getQueryString());
+    	model = initModel(model);
+    	
+        return "touristDetail";
+    }
+    
+    public Model initModel(Model model) {
+    	model.addAttribute("auth", isAuthenticated());
+    	Set<Category> allCategories = new HashSet<Category>(categoryRepository.findAll());
+    	TouristSpotDao touristSpotDao = new TouristSpotDao();
+    	
+     	Set<TouristSpot> allTouristSpot = new HashSet<TouristSpot>(touristSpotRepository.findAll());
 
-    	System.out.println("It works");
-    	System.out.println("NAME DA PIC " + touristSpot.getName());
-    	System.out.println("PASSA");
-    	System.out.println("PIC BYTES" + touristSpot.getPicture());
+    	model.addAttribute("allTouristPost", allTouristSpot);
+    	model.addAttribute("touristSpot", allCategories);
+    	model.addAttribute("tourist", touristSpotDao);
+    	return model;
+    	
+    }
+    
+    public UserDetails returnUdIfAuth() {
+    	HttpSession session = context.getSession();
+    	Cookie cookie = (Cookie) session.getAttribute("cookieSession");
+    	if (cookie!= null) {
+    		  return homeService.getUserDetailsFromAccessToken(cookie.getValue());
+    	}
+    	return null;
+    }
+    
+    @PostMapping(value={"", "/"})
+    public  String createCategory( @Valid @ModelAttribute("tourist") TouristSpotDao touristSpot, Model model) {
+    	System.out.println("123");
+    	UserDetails ud = returnUdIfAuth();
+    	if (ud == null )
+    		return "index";
+    	User u = userRepository.finUserById(ud.getId());
+    	if (u == null)
+    		return "index";
     	TouristSpot result = new TouristSpot();
-    	Set categories = new HashSet();
+    	
     	TouristSpot search = touristSpotRepository.findTouristSpotByName(touristSpot.getName());
+    	System.out.println(" 456 456 456 ");
     	if (!isAuthenticated() || (search != null && search.getId() != null))
     		result.setName("Erro");
-    	else {
-    		Category c = new Category(touristSpot.getIdCategory());
-    		categories.add(c);
+    	else { 
+    		Category c = categoryRepository.findCategoryById(touristSpot.getIdCategory());
     		result.setName(touristSpot.getName());
-    		result.setMainPicture(touristSpot.getPicture());
+    		System.out.println("ANTES DO ERRO ;;;; ;;;; ");
+    	    result.setMainPicture(touristSpot.getPicture());
+    	    System.out.println("DEPOIS DO ERRRO");
     		result.setStatus(true);
-    		result.setUser(new User(touristSpot.getIdUser()));
-    		result.setCategories(categories);
+    		result.setUser(u);
+    		result.setCategory(c);
+    		result.setLatLocalization(touristSpot.getLatLocalization());
+    		result.setLongLocalization(touristSpot.getLongLocalization());
+    		System.out.println(" 000000 ");
     		result =  touristSpotRepository.save(result);
+    		System.out.println("#######################");
     	}
-		System.out.println("CAT " + touristSpot.getName());
-		System.out.println("CAT F" + touristSpot.getIdCategory());
+
+		
+		
+    	model = initModel(model);
 		
     	return "index";
     }

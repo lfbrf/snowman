@@ -2,8 +2,10 @@ package br.com.snowman.model;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -59,23 +61,6 @@ public class Category  implements Serializable{
 
 	public void setStatus(boolean status) {
 		this.status = status;
-	}
-	
-	
-	
-	@ManyToOne
-    @JoinColumn(name="tourist_id")
-	private TouristSpot touristSpot;
-	
-
-  
-	
-	public TouristSpot getTourist() {
-		return touristSpot;
-	}
-
-	public void setTouristSpot(TouristSpot touristSpot) {
-		this.touristSpot = touristSpot;
 	}
 
 	@Column(nullable = false)

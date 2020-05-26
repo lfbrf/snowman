@@ -1,9 +1,8 @@
 package br.com.snowman.model;
 
 import java.io.Serializable;
-import java.sql.Blob;
-import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -26,11 +24,11 @@ public class TouristSpot implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public TouristSpot(String name, boolean status, byte[] mainPicture, Set<Category> categories, User user) {
+	public TouristSpot(String name, boolean status, String mainPicture,  Category category, User user) {
 		this.name = name;
 		this.status = status;
 		this.mainPicture = mainPicture;
-		this.categories = categories;
+		this.category = category;
 		this.user = user;
 	}
 	
@@ -53,16 +51,6 @@ public class TouristSpot implements Serializable {
 	}
 
 
-
-
-	public Set<Category> getCategories() {
-		return categories;
-	}
-
-	public void setCategories(Set<Category> categories) {
-		this.categories = categories;
-	}
-
 	public User getUser() {
 		return user;
 	}
@@ -73,9 +61,10 @@ public class TouristSpot implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "tourist_id")
 	private Long id;
-
+	
+	
+	
 	public Long getId() {
 		return id;
 	}
@@ -124,27 +113,35 @@ public class TouristSpot implements Serializable {
 	public void setNumberVotes(long numberVotes) {
 		this.numberVotes = numberVotes;
 	}
-
 	@Lob
     @Column
-    private byte[] mainPicture;
+    private String mainPicture;
 	
-	public byte[] getMainPicture() {
+	public String getMainPicture() {
 		return mainPicture;
 	}
 
-	public void setMainPicture(byte[] picture) {
+	public void setMainPicture(String picture) {
 		this.mainPicture = picture;
 	}
 
-	// In future maybe is necessary to add more than one category for touris spot
-	@OneToMany(mappedBy="touristSpot")
-	private Set<Category> categories;
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Category category;
 	
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+	
 	
 	
 }

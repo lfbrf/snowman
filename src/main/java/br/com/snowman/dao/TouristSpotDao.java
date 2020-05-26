@@ -1,10 +1,11 @@
-package br.com.snowm.dao;
+package br.com.snowman.dao;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
 
 
-@Entity
 public class TouristSpotDao implements Serializable {
 	
 	/**
@@ -44,15 +45,18 @@ public class TouristSpotDao implements Serializable {
 	private boolean status;
 	
 	
-    private byte[] picture;
-	
-	public byte[] getPicture() {
+    public String getPicture() {
 		return picture;
 	}
 
-	public void setPicture(byte[] picture) {
+	public void setPicture(String picture) {
 		this.picture = picture;
 	}
+	
+	@Lob
+	private String picture;
+	
+	
 
 	public long getIdUser() {
 		return idUser;
@@ -89,6 +93,7 @@ public class TouristSpotDao implements Serializable {
 	private String longLocalization;
 	private long idUser;
 	private long idCategory;
+	@Id
 	private Long id;
 	
 

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Ponto Turístico</title>
+<!-- Bootstrap core CSS -->
+<link href="../bootstrap.min.css" rel="stylesheet">
+
+<!-- Custom styles for this template -->
+<link href="../main.css" rel="stylesheet">
+</head>
+<body>
+    <div id="header"></div>
+	<div id="fb-root"></div>
+	<!-- Usar o FB.logut() para derruba um usuário -->
+	<script async defer crossorigin="anonymous"
+		src="https://connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v7.0&appId=325921808404719&autoLogAppEvents=1"></script>
+	<div class="container">
+	
+
+
+	
+<form>
+<h3>Ponto turístico</h3>
+	<div id="header"></div>
+  <div class="form-group">
+   <!-- pic -->
+    <input type="text" class="form-control"  >
+  </div>
+  <div class="form-group">
+    <label for="category">Categoria</label>
+    <input type="text" class="form-control"  >
+  </div>
+  <div class="form-group">
+    <label for="localization">Localização</label>
+    <input type="text" class="form-control"  >
+  </div>
+  <div class="form-group">
+    <label for="localization">Localização</label>
+    <input type="text" class="form-control"  >
+  </div>
+  
+  <div th:if="${auth}" class="fb-comments" data-href="https://localhost:8445/turistico" id="fbComent"
+		data-numposts="5" data-width=""></div>
+  
+  
+</form>
+</div>
+<div id="footer"></div>
+
+
+	<script src="../jquery.min.js"></script>
+	<script src="../bootstrap.bundle.min.js"></script>
+
+<script
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCykXMI93ml2s-159-aiOPQh1_dUyoUjsg&libraries=places&callback=initMap"
+		async defer></script>
+		
+<script type="text/javascript">
+$(function(){
+	$(".fb-comments").attr('data-href', window.location.href);
+    $("#header").load("https://" + window.location.host + "/components/header.html"); 
+    $("#footer").load("https://" + window.location.host + "/components/footer.html");	
+ });
+</script>		
+		
+</body>
+</html>

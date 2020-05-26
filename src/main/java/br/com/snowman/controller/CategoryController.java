@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.com.snowman.model.Category;
 import br.com.snowman.repository.CategoryRepository;
+import br.com.snowman.repository.TouristSpotRepository;
 import br.com.snowman.service.HomeService;
 
 @Controller
@@ -29,12 +30,16 @@ public class CategoryController {
     CategoryRepository categoryRepository;
 	
 	@Autowired
+    TouristSpotRepository touristSpotRepository;
+	
+	@Autowired
 	private HttpServletRequest context;
 	
 
     @GetMapping(value={"", "/"})
     public String  listCategories(Model model) {
     	model = initCategory(model);
+    
         return "category";
     }
     
@@ -61,6 +66,15 @@ public class CategoryController {
     	model.addAttribute("result", result);
     	return "category";
     }
+    
+    @GetMapping(value= "/*")
+    public String  listCategoryByFilter(Model model) {
+    	System.out.println("It Works well /*");
+    	model = initCategory(model);
+        return "category";
+    }
+    
+    
   
     
     public boolean isAuthenticated() {

@@ -76,6 +76,7 @@ public class User  implements Serializable{
 		this.faceId = faceId;
 	}
 
+	public User() {}
 	
 	public User(String name, String email,  String faceId, boolean status) {
 		this.name = name;
