@@ -54,6 +54,7 @@ public class CategoryController {
     
     @PostMapping(value={"", "/"})
     public  String createCategory( @Valid @ModelAttribute("category") Category category, Model model) {
+
     	Category result = new Category();
     	Category search = new Category();
     	

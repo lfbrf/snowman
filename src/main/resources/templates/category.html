@@ -29,7 +29,7 @@
 						<div class="modal-body">
 							
 								<div class="form-group">
-									<label for="recipient-name" class="col-form-label">Nomes:</label>
+									<label for="recipient-name" class="col-form-label">Nome:</label>
 									<input type="text" class="form-control" th:field="*{name}"  />
 								</div>
 							
@@ -46,12 +46,12 @@
 		</div>
 	</div>
 	
-	<h3>Ranking top 10 categorias</h3>
+	<h3>Categorias</h3>
 	
 	<table class="table table-bordered table-condensed table-hover">
 		<thead>
 			<tr style="font-weight: bold;">
-				<td>Número de pontos turísticos</td>
+				<td>#</td>
 				<td>Categoria</td>
 			</tr>
 
@@ -86,9 +86,9 @@
 	  setTimeout(function(){
 		  if (returnSave!= "default"){
 		 	  if (returnSave == "Erro")
-		 		  showMessage("error", "Erro ao cadastrar categoria, tente novamente", 6000);
-		 	  else
-		 		  showMessage("success", "Sucesso ao cadastrar categoria", 6000);
+		 		  showMessage("error", "Erro ao cadastrar categoria, tente novamente", 2600);
+		 	  else if (returnSave != null)
+		 		  showMessage("success", "Sucesso ao cadastrar categoria", 2600);
 	  	  }
 		}, 2700);
 	  

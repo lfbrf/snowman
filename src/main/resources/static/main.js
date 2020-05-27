@@ -25,10 +25,12 @@
                     $("#login").hide();
                     $("#logout").show();
                     //showUserInfo()
+                    setUserName();
                 }
                 else {
                     $("#logout").hide();
                     $("#login").show();
+                    $("#userName").text("Log com sua conta do facebook para todas as funcionalidades");
                 }
             },
             error: function (res, status) {
@@ -41,10 +43,18 @@
         $.ajax({
             url: "/facebook/userinfo",
             success: function (res, status) {
-                console.log(res);
-                $("#userinfo").html(JSON.stringify(res, null, 2));
+                //$("#userinfo").html(JSON.stringify(res, null, 2));
             }
-        })
+        });
+    }
+    
+    function setUserName(){
+    	 $.ajax({
+             url: "/facebook/userinfo",
+             success: function (res, status) {
+            	 $("#userName").text(res.name);
+             }
+         });
     }
 
     $("#logout").click(function () {

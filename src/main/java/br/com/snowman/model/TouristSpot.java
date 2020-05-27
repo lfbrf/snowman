@@ -137,7 +137,8 @@ public class TouristSpot implements Serializable {
 	public void setCategory(Category category) {
 		this.category = category;
 	}
-
+	
+	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

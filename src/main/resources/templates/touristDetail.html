@@ -25,19 +25,30 @@
 	<div id="header"></div>
   <div class="form-group">
    <!-- pic -->
-    <input type="text" class="form-control"  >
+   <img class="card-img-top" style="width: 150px; height: 150 px;"  th:src="${touristById.mainPicture}" alt="">
   </div>
   <div class="form-group">
-    <label for="category">Categoria</label>
-    <input type="text" class="form-control"  >
-  </div>
-  <div class="form-group">
-    <label for="localization">Localização</label>
-    <input type="text" class="form-control"  >
+    <label for="category">Nome</label> 
+    <input type="text" class="form-control" id="nameInput" readonly="readonly"  >
+    <span th:text="${touristById.name}" id="name" style="display:none;"></span>
   </div>
   <div class="form-group">
     <label for="localization">Localização</label>
-    <input type="text" class="form-control"  >
+    <input type="text" class="form-control" id="localization" readonly="readonly" >
+    <span th:text="${touristById.latLocalization}" id="latLocalization" style="display:none;"></span>
+    <span th:text="${touristById.longLocalization}" id="longLocalization" style="display:none;"></span>
+    
+  </div>
+  <div class="form-group">
+    <label for="localization">Categoria</label>
+    <input type="text" class="form-control" id="categoryNameInput" readonly="readonly" >
+    <span th:text="${touristById.category.name}" id="categoryName" style="display:none;" ></span>
+  </div>
+  
+   <div class="form-group">
+    <label for="category">Autor</label> 
+    <input type="text" class="form-control" id="authorNameInput" readonly="readonly"  >
+    <span th:text="${touristById.user.name}" id="authorName" style="display:none" ></span>
   </div>
   
   <div th:if="${auth}" class="fb-comments" data-href="https://localhost:8445/turistico" id="fbComent"
@@ -61,7 +72,26 @@ $(function(){
 	$(".fb-comments").attr('data-href', window.location.href);
     $("#header").load("https://" + window.location.host + "/components/header.html"); 
     $("#footer").load("https://" + window.location.host + "/components/footer.html");	
+    
+    initForm();
  });
+
+ function latLongToAddress(){
+	 latlng = $("#latLocalization").text() + "," + $("#longLocalization").text();
+	 $.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latlng + "&key=AIzaSyCykXMI93ml2s-159-aiOPQh1_dUyoUjsg"
+			 , function(data, status){
+		 $("#localization").val(data.results[0].formatted_address);
+	 });
+ }
+ 
+ function initForm(){
+	 $("#nameInput").val($('#name').text());
+	 $("#localization").val($('#name').text());
+	 $("#categoryNameInput").val($('#categoryName').text());
+	 $("#authorNameInput").val($("#authorName").text());
+	 latLongToAddress();
+ }
+
 </script>		
 		
 </body>

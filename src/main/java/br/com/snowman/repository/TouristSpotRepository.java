@@ -12,10 +12,17 @@ import br.com.snowman.model.TouristSpot;
 @Repository
 public interface TouristSpotRepository extends JpaRepository<TouristSpot, Long> {
 	@Query(value = "SELECT * FROM tourist t WHERE t.name like %:name% ", nativeQuery = true)
-	public TouristSpot findTouristSpotByName(@Param("name") String name);
+	public List<TouristSpot> findTouristSpotByName(@Param("name") String name);
+	
+	@Query(value = "SELECT * FROM tourist t WHERE t.name = :name LIMIT 1", nativeQuery = true)
+	public TouristSpot findUniqueTouristSpotByName(@Param("name") String name);
 	 
 
 	@Query(value = "SELECT * FROM tourist WHERE category_category_id = ?1 LIMIT 1", nativeQuery = true)
 	public List<TouristSpot> findTouristSpotByCategory(@Param("categoryId") long categoryId);
+	
+	@Query(value = "SELECT * FROM tourist WHERE id = ?1 LIMIT 1", nativeQuery = true)
+	public TouristSpot findTouristById(@Param("id") long id);
+	
 }	
 
