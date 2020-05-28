@@ -25,6 +25,7 @@ import br.com.snowman.dao.TouristSpotDao;
 import br.com.snowman.domain.UserDetails;
 import br.com.snowman.model.Category;
 import br.com.snowman.model.TouristSpot;
+import br.com.snowman.model.TouristSpotPicture;
 import br.com.snowman.model.User;
 import br.com.snowman.repository.CategoryRepository;
 import br.com.snowman.repository.TouristSpotRepository;
@@ -65,22 +66,25 @@ public class TouristSpotController {
     	model.addAttribute("searchName", touristSpotRepository.findTouristSpotByName(name));
     	model.addAttribute("searchFilter", true);
     	System.out.println("CHAMA AQUI S ++++++++++ +++"); 
-    	if (isAuthenticated(session))
+    	if (homeService.isAuthenticated())
     		return "index";
     	return "error";
     }
     
     @GetMapping("/turistico")
     public  String  listById(Model model, HttpServletRequest request, HttpSession session, @RequestParam("id") long id) {
-    	model.addAttribute("auth", isAuthenticated(session));
+    	model.addAttribute("auth", homeService.isAuthenticated());
     	TouristSpot ts = touristSpotRepository.getOne(id);
     	model = initModel(model, session);
     	model.addAttribute("touristById", ts);
+    	model.addAttribute("touristUploadImage", new TouristSpotPicture());
         return "touristDetail";
     }
     
+   
+    
     public Model initModel(Model model, HttpSession session ) {
-    	model.addAttribute("auth", isAuthenticated(session));
+    	model.addAttribute("auth", homeService.isAuthenticated());
     	
     	TouristSpotDao touristSpotDao = new TouristSpotDao();
     	Set<Category> allCategories = new HashSet<Category>(categoryRepository.findAll());
@@ -136,14 +140,14 @@ public class TouristSpotController {
     	UserDetails ud = returnUdIfAuth(session);
     	if (ud == null )
     		return "index";
-    	User u = userRepository.finUserById(ud.getId());
+    	User u = userRepository.findUserByFaceId(ud.getId());
     	if (u == null)
     		return "index";
     	TouristSpot result = new TouristSpot();
     	 
     	TouristSpot search = touristSpotRepository.findUniqueTouristSpotByName(touristSpot.getName());
     	System.out.println(" 456 456 456 ");
-    	if (!isAuthenticated(session))
+    	if (!homeService.isAuthenticated())
     		result.setName("Not auth");
     	else if ((search != null && search.getId() != null))
     		result.setName("Erro");
@@ -168,8 +172,9 @@ public class TouristSpotController {
     	
 		
     	return "index";
-    }
+    } 
     
+    /*
     public boolean isAuthenticated(HttpSession session) {
     	session = context.getSession();
     	Cookie cookie = (Cookie) session.getAttribute("cookieSession");
@@ -177,6 +182,6 @@ public class TouristSpotController {
     		  return homeService.userIsAuthenticated(cookie.getValue());
     	}
     	return false;
-    }
+    }*/
 
 }

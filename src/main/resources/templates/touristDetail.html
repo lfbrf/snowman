@@ -8,6 +8,8 @@
 
 <!-- Custom styles for this template -->
 <link href="../main.css" rel="stylesheet">
+
+<link href="../imagestyle.css" rel="stylesheet">
 </head>
 <body>
     <div id="header"></div>
@@ -23,10 +25,25 @@
 <form>
 <h3>Ponto turístico</h3>
 	<div id="header"></div>
+	<div class="dropzone" id="myDropzone">
+	</div>
   <div class="form-group">
    <!-- pic -->
-   <img class="card-img-top" style="width: 150px; height: 150 px;"  th:src="${touristById.mainPicture}" alt="">
+   <h3>Foto principal</h3>
+   <img class="card-img-top" style="width: 350px; height: 350 px; display: block; margin: auto auto;"  th:src="${touristById.mainPicture}" alt="">
   </div>
+  <div class="form-group">
+  <h4>Demais fotos</h4>
+    <div class="row">
+		 
+ 		<div class="col-md-2 p-2">
+ 		
+           <a href="#"><img src="http://placehold.it/250x250" alt="inn_logo"></a>
+       </div>
+
+	</div>
+
+	</div>
   <div class="form-group">
     <label for="category">Nome</label> 
     <input type="text" class="form-control" id="nameInput" readonly="readonly"  >
@@ -50,12 +67,42 @@
     <input type="text" class="form-control" id="authorNameInput" readonly="readonly"  >
     <span th:text="${touristById.user.name}" id="authorName" style="display:none" ></span>
   </div>
+ 
   
+ 
+  </form>
+  <div th:if="${auth}">
+	<form  action="#" th:action="@{/turistico/image?id=} + ${touristById.id}" method="post"
+	 accept-charset="UTF-8" enctype="multipart/form-data" th:object="${touristUploadImage}">	
+	   <div class="form-group">
+	   
+	  	<img id='imgTouristUpload'  style="width: 150px; height: 150px; display: block; margin: auto auto;"  onchange="setPicValue()" /> <input type="text"
+										class="form-control" th:field="*{picture}"
+										style="display: none; " />
+									
+	  	</div>
+		  <div class="input-group" th:if="${auth}">
+										<span class="input-group-btn"> <span
+											class="btn btn-default btn-file"> Adicionar outra imagem <input
+												type="file" id="imgInp" accept="image/*">
+										</span>
+										</span> <input type="text" class="form-control" readonly>
+		 </div>
+ 
+ 
+		 <div class="form-group" style="margin-bottom: 50px; margin-top:10px;">
+		<div style="" class="">
+		    <button type="submit" class="btn btn-primary" onclick="setPicValue();" style="float:right;">Upload</button></div>
+		</div>
+ 	</form>	
+ 	
+ 	
+ 
   <div th:if="${auth}" class="fb-comments" data-href="https://localhost:8445/turistico" id="fbComent"
 		data-numposts="5" data-width=""></div>
   
-  
-</form>
+  </div>
+
 </div>
 <div id="footer"></div>
 
@@ -74,7 +121,12 @@ $(function(){
     $("#footer").load("https://" + window.location.host + "/components/footer.html");	
     
     initForm();
+
  });
+ 
+ function setPicValue(){
+	 $("#picture").val($("#imgTouristUpload").attr('src'));
+ }
 
  function latLongToAddress(){
 	 latlng = $("#latLocalization").text() + "," + $("#longLocalization").text();
@@ -91,6 +143,7 @@ $(function(){
 	 $("#authorNameInput").val($("#authorName").text());
 	 latLongToAddress();
  }
+ 
 
 </script>		
 		

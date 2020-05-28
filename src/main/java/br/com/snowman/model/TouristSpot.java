@@ -1,6 +1,9 @@
 package br.com.snowman.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,9 +13,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 
 @Entity
@@ -33,6 +40,10 @@ public class TouristSpot implements Serializable {
 	}
 	
 	public TouristSpot() {}
+	
+	public TouristSpot(long id) {
+		this.id = id;
+	}
 	
 	public String getName() {
 		return name;
@@ -61,6 +72,7 @@ public class TouristSpot implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "tourist_id")
 	private Long id;
 	
 	
@@ -143,6 +155,46 @@ public class TouristSpot implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 	
+	 
+	@OneToMany(mappedBy="tourist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<TouristSpotPicture> touristPictures;
 	
+	
+	public List<Favority> getFavority() {
+		return favority;
+	}
+
+	public void setFavority(List<Favority> favority) {
+		this.favority = favority;
+	}
+
+	public List<Favority> getUpvote() {
+		return upvote;
+	}
+
+	public void setUpvote(List<Favority> upvote) {
+		this.upvote = upvote;
+	}
+
+	@OneToMany(mappedBy="tourist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Favority> favority;
+	
+	@OneToMany(mappedBy="tourist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Favority> upvote;
+	
+	
+	
+
+	public List<TouristSpotPicture> getTouristPictures() {
+		return touristPictures;
+	}
+
+	public void setTouristPictures(List<TouristSpotPicture> touristPictures) {
+		this.touristPictures = touristPictures;
+	}
+	
+	
+	
+
 	
 }

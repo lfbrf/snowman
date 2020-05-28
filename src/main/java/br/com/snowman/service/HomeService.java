@@ -12,4 +12,6 @@ public interface HomeService {
    void saveUserIfNotExists(String accessToken, UserDetails userDetails);
    String getAppAccessToken();
    String genCSRF();
+   boolean isAuthenticated();
+   UserDetails getCurrentUserInSession();
 }

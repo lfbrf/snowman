@@ -41,12 +41,12 @@ public class CategoryController {
     	model = initCategory(model);
     
         return "category";
-    }
+    } 
     
     public Model initCategory(Model model) {
     	model.addAttribute("allCategories", categoryRepository.findAll() + "");
     	model.addAttribute("categories", categoryRepository.findAll());
-        model.addAttribute("auth", isAuthenticated());
+        model.addAttribute("auth", homeService.isAuthenticated());
         model.addAttribute("category", new Category());
         return model;
     }
@@ -59,7 +59,7 @@ public class CategoryController {
     	Category search = new Category();
     	
     	search = categoryRepository.findCategoryByName(category.getName());
-    	if (!isAuthenticated() || (search != null && search.getId() != null))
+    	if (!homeService.isAuthenticated() || (search != null && search.getId() != null))
     		result =  new Category ("Erro", false);
     	else
     		result =  categoryRepository.save(category);
@@ -77,7 +77,7 @@ public class CategoryController {
     
     
   
-    
+    /*
     public boolean isAuthenticated() {
     	HttpSession session = context.getSession();
     	Cookie cookie = (Cookie) session.getAttribute("cookieSession");
@@ -85,6 +85,6 @@ public class CategoryController {
     		  return homeService.userIsAuthenticated(cookie.getValue());
     	}
     	return false;
-    }
+    }*/
 
 }

@@ -31,7 +31,7 @@
 			<div th:if="${auth}">
 				<button onclick="refreshIdCategory(); initAutocomplete()"
 					type="button" class="btn btn-primary" data-toggle="modal"
-					style="margin: 20px;" data-target="#newTouristModal">Cadastrar
+					style="margin: 20px; float:right;" data-target="#newTouristModal">Cadastrar
 					Ponto Turístico</button>
 
 
@@ -160,7 +160,7 @@
 							<div class="input-group">
 								<span class="input-group-btn"> <span
 									class="btn btn-default btn-file"> Selecione uma Foto <input
-										type="file" id="imgInp">
+										type="file" id="imgInp" accept="image/*">
 								</span>
 								</span> <input type="text" class="form-control" readonly>
 							</div>

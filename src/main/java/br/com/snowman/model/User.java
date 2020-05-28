@@ -1,12 +1,16 @@
 package br.com.snowman.model;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 @Entity
 @Table(name = "user")
@@ -87,4 +91,41 @@ public class User  implements Serializable{
 
 	@Column(nullable = true) 
 	private String email;
+	
+	
+	public List<Favority> getFavority() {
+		return favority;
+	}
+
+	public void setFavority(List<Favority> favority) {
+		this.favority = favority;
+	}
+
+	public List<Favority> getUpvote() {
+		return upvote;
+	}
+
+	public void setUpvote(List<Favority> upvote) {
+		this.upvote = upvote;
+	}
+
+	@OneToMany(mappedBy="user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Favority> favority;
+	
+	@OneToMany(mappedBy="user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Favority> upvote;
+	
+	@OneToMany(mappedBy="user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<TouristSpotPicture> touristPictures;
+
+	public List<TouristSpotPicture> getTouristPictures() {
+		return touristPictures;
+	}
+
+	public void setTouristPictures(List<TouristSpotPicture> touristPictures) {
+		this.touristPictures = touristPictures;
+	}
+
+	
+
 }

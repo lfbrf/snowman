@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,13 +30,16 @@ import br.com.snowman.repository.UserRepository;
 public class HomeServiceImpl implements HomeService {
 	@Autowired
 	private RestTemplate restTemplate;
-	
+
 	@Autowired
 	UserRepository userRepository;
 	
+	@Autowired
+	private HttpServletRequest context;
+
 	@Bean
 	public RestTemplate restTemplate(RestTemplateBuilder builder) {
-	   return builder.build();
+		return builder.build();
 	}
 
 	private final String REDIRECT_URI;
@@ -51,6 +58,23 @@ public class HomeServiceImpl implements HomeService {
 	public String genCSRF() {
 		return UUID.randomUUID().toString();
 	}
+	
+	public UserDetails getCurrentUserInSession() {
+		HttpSession session = context.getSession();
+		Cookie cookie = (Cookie) session.getAttribute("cookieSession");
+		return getUserDetailsFromAccessToken(cookie.getValue());
+	}
+
+	public boolean isAuthenticated() {
+		HttpSession session = context.getSession();
+		Cookie cookie = (Cookie) session.getAttribute("cookieSession");
+		if (cookie!= null) {
+			return userIsAuthenticated(cookie.getValue());
+		}
+		return false;
+	}
+	
+	
 
 	public boolean userIsAuthenticated(String access_token) {
 		AccessTokenData accessTokenData;
@@ -132,7 +156,7 @@ public class HomeServiceImpl implements HomeService {
 
 	@Override
 	public void saveUserIfNotExists(String accessToken, UserDetails userDetails) {
-		User u = userRepository.finUserById(userDetails.getId());
+		User u = userRepository.findUserByFaceId(userDetails.getId());
 		if (u != null && u.getName() != null) 
 			return ;
 		else

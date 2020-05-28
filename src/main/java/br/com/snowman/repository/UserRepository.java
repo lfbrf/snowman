@@ -10,7 +10,7 @@ import br.com.snowman.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 	@Query(value = "SELECT * FROM user WHERE face_id = ?1 ", nativeQuery = true)
-	public User finUserById(String string);
+	public User findUserByFaceId(String string);
 	
 
 }	
