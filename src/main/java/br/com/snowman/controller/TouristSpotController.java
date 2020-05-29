@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,19 +68,29 @@ public class TouristSpotController {
     	model.addAttribute("searchFilter", true);
     	System.out.println("CHAMA AQUI S ++++++++++ +++"); 
     	if (homeService.isAuthenticated())
-    		return "index";
+    		return "/";
     	return "error";
     }
     
-    @GetMapping("/turistico")
-    public  String  listById(Model model, HttpServletRequest request, HttpSession session, @RequestParam("id") long id) {
-    	model.addAttribute("auth", homeService.isAuthenticated());
-    	TouristSpot ts = touristSpotRepository.getOne(id);
-    	model = initModel(model, session);
-    	model.addAttribute("touristById", ts);
-    	model.addAttribute("touristUploadImage", new TouristSpotPicture());
-        return "touristDetail";
+    @GetMapping("/buscausuario")
+    public   String  searchByUser(Model model, HttpSession session) {
+    	if (!homeService.isAuthenticated()) {
+    		return "error";
+    	}
+    	else {
+    		model = initModel(model, session);
+        	UserDetails ud = homeService.getCurrentUserInSession();
+    		User user = userRepository.findUserByFaceId(ud.getId());
+        	model.addAttribute("searchName", touristSpotRepository.findTouristSpotByUser(user.getId()));
+        	model.addAttribute("searchFilter", true);
+        	System.out.println("CHAMA AQUI S ++++++++++ +++"); 
+        	
+        	return "/";
+    	}
+    	
     }
+    
+
     
    
     
@@ -135,7 +146,7 @@ public class TouristSpotController {
     
     
     @PostMapping(value={"", "/"})
-    public  String createCategory( @ModelAttribute("tourist") TouristSpotDao touristSpot, Model model, HttpSession session) {
+    public  String createCategory( @ModelAttribute("tourist") TouristSpotDao touristSpot, Model model, HttpSession session, HttpServletResponse response) {
     	System.out.println("123");
     	UserDetails ud = returnUdIfAuth(session);
     	if (ud == null )
@@ -167,11 +178,11 @@ public class TouristSpotController {
     		System.out.println("#######################");
     	}
 
-    	model = initModel(model, session);
+    	//model = initModel(model, session);
 		model.addAttribute("savedTourist", result);
     	
 		
-    	return "index";
+    	return "redirect:/";
     } 
     
     /*

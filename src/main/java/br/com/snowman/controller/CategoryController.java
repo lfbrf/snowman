@@ -63,9 +63,9 @@ public class CategoryController {
     		result =  new Category ("Erro", false);
     	else
     		result =  categoryRepository.save(category);
-    	model = initCategory(model);
+    	//model = initCategory(model);
     	model.addAttribute("result", result);
-    	return "category";
+    	return "redirect:/categoria";
     }
     
     @GetMapping(value= "/*")

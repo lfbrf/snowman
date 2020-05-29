@@ -103,7 +103,7 @@ public class HomeController {
     }
 
     @GetMapping("/facebook/auth")
-    public boolean isAuthenticated(@CookieValue(value = "access_token", required = false) String access_token) {
+    public boolean isAuthenticated(@CookieValue(value = "access_token", required = false) String access_token, HttpServletResponse response) {
     	
         if (access_token == null) {
             return false;

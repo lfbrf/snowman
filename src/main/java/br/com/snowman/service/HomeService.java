@@ -1,5 +1,7 @@
 package br.com.snowman.service;
 
+import javax.servlet.http.HttpServletResponse;
+
 import br.com.snowman.domain.AccessToken;
 import br.com.snowman.domain.AccessTokenData;
 import br.com.snowman.domain.UserDetails;

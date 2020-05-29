@@ -39,12 +39,12 @@ public class TouristSpotPicture {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name="tourist_id", nullable=true)
+	@ManyToOne( fetch = FetchType.LAZY)
+    @JoinColumn(name="tourist_id", nullable=false)
     private TouristSpot tourist;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id", nullable=true)
+	@ManyToOne( fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id", nullable=false)
     private User user;
 
 	public User getUser() {

@@ -5,6 +5,10 @@ function openTourist(id){
   }	
  
 
+  function searchUser(){
+	  window.location.href = "buscausuario";
+  }
+
   var allTourists = "";
   function refreshIdCategory(){
 	  $("#idCategory").val($("#category").val());
@@ -12,7 +16,7 @@ function openTourist(id){
   
   function checkField(campo){
 	  if ($(campo + "").val() == ""){
-		  showMessage("error", "Faltou preencher um ou mais campos", 6000);
+		  showMessage("error", "Faltou preencher um ou mais campos", 2000);
 		  $("#closeModal").click();
 		  return false
 	  }
@@ -36,7 +40,8 @@ function openTourist(id){
 
 		 
 		   $("#picture").val(  $('#imgTouristUpload').attr('src'));
-		  //$("#picture").val(  "BLA BLA BLA");
+		 
+
 		   $("#saveTourist").click();
 		 
 	  }
@@ -44,6 +49,8 @@ function openTourist(id){
 
 	
 	function initAutocomplete() {
+		$("#latLocalization").val("");
+		$("#longLocalization").val("");
 		var place = ""; 
 		    autocomplete = new google.maps.places.Autocomplete(
 				(document.getElementById('touristLocation')),

@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
@@ -54,7 +55,7 @@ public class HomeServiceImpl implements HomeService {
 		this.APP_ID = APP_ID;
 		this.APP_SECRET = APP_SECRET;
 	}
-	private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(HomeServiceImpl.class);
 	public String genCSRF() {
 		return UUID.randomUUID().toString();
 	}
@@ -132,6 +133,9 @@ public class HomeServiceImpl implements HomeService {
 							UserDetails.class, urlparams);
 		} catch (HttpStatusCodeException exception) {
 			LOGGER.warn(exception.getResponseBodyAsString());
+			if (String.valueOf(exception.getStatusCode()).equals("403")) {
+				LOGGER.warn("Limite de uso do facebook excedido");
+			}
 			throw new RuntimeException(String.valueOf(exception.getStatusCode()));
 		}
 	}

@@ -10,6 +10,8 @@
 <link href="../main.css" rel="stylesheet">
 
 <link href="../imagestyle.css" rel="stylesheet">
+
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 </head>
 <body>
     <div id="header"></div>
@@ -22,25 +24,39 @@
 
 
 	
-<form>
-<h3>Ponto turístico</h3>
+
+<h3>Ponto turístico:    <span th:text="${touristById.name}" th:remove="tag"></span></h3>
 	<div id="header"></div>
 	<div class="dropzone" id="myDropzone">
 	</div>
   <div class="form-group">
    <!-- pic -->
-   <h3>Foto principal</h3>
+   <h5>Foto principal: </h5>
    <img class="card-img-top" style="width: 350px; height: 350 px; display: block; margin: auto auto;"  th:src="${touristById.mainPicture}" alt="">
   </div>
   <div class="form-group">
-  <h4>Demais fotos</h4>
-    <div class="row">
-		 
- 		<div class="col-md-2 p-2">
- 		
-           <a href="#"><img src="http://placehold.it/250x250" alt="inn_logo"></a>
-       </div>
+	<h5>Fotos que adicionei</h5>
+    <div class="row" >
 
+    	<div class="col-md-2 p-2" th:each="tourist : ${touristById.touristPictures}"  th:if="${currentUserId} != -1 and ( ${currentUserId} eq ${tourist.user.id} )" >
+           <img th:src="${tourist.picture}" alt="inn_logo" style="max-height:130px; width:90%;">
+           <p  th:onclick="|deletePicture('${tourist.id}')|" > <i class="icon-remove" style=" position: absolute; right: 5%; top: 5%; transform: translate(-50%, -50%); cursor: pointer;"></i> </p> 
+       		
+       		<div  style="display: none; ">
+	       		<form  action="#" th:action="@{/turistico/image?idTouristPicture=} + ${touristById.id} + '&idImage=' + ${tourist.id}" 
+	       			th:method="DELETE" >	
+				 		<button type="submit" th:id="'buttonDelete' + ${tourist.id}" ></button>
+				 </form>
+       		</div>
+       </div>
+   
+ 		
+	</div>
+	<h5>Fotos dos outros usuários</h5>
+    <div class="row" >
+	    <div class="col-md-2 p-2" th:each="tourist : ${touristById.touristPictures}" th:if="${currentUserId} == -1 or ( ${currentUserId} != ${tourist.user.id} )">
+	           <img th:src="${tourist.picture}" alt="inn_logo" style="max-height:130px; width:90%;">
+	       </div>
 	</div>
 
 	</div>
@@ -70,7 +86,6 @@
  
   
  
-  </form>
   <div th:if="${auth}">
 	<form  action="#" th:action="@{/turistico/image?id=} + ${touristById.id}" method="post"
 	 accept-charset="UTF-8" enctype="multipart/form-data" th:object="${touristUploadImage}">	
@@ -78,10 +93,9 @@
 	   
 	  	<img id='imgTouristUpload'  style="width: 150px; height: 150px; display: block; margin: auto auto;"  onchange="setPicValue()" /> <input type="text"
 										class="form-control" th:field="*{picture}"
-										style="display: none; " />
-									
+										style="display: none; " />			
 	  	</div>
-		  <div class="input-group" th:if="${auth}">
+		  <div class="input-group" >
 										<span class="input-group-btn"> <span
 											class="btn btn-default btn-file"> Adicionar outra imagem <input
 												type="file" id="imgInp" accept="image/*">
@@ -98,7 +112,7 @@
  	
  	
  
-  <div th:if="${auth}" class="fb-comments" data-href="https://localhost:8445/turistico" id="fbComent"
+  <div  class="fb-comments" data-href="https://localhost:8445/turistico" id="fbComent"
 		data-numposts="5" data-width=""></div>
   
   </div>
@@ -123,6 +137,13 @@ $(function(){
     initForm();
 
  });
+ 
+ function deletePicture(id){
+	 if (window.confirm("Tem certeza que deseja deletar a imagem?")) { 
+		 $("#buttonDelete" + id).click();
+	}
+
+ }
  
  function setPicValue(){
 	 $("#picture").val($("#imgTouristUpload").attr('src'));
