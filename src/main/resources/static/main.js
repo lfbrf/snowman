@@ -111,6 +111,7 @@
         		return;
         	}
         }
+        showMessage("success", "Categoria cadastrada com sucesso", 2000);
         $("#saveCategory").click();
     }    
    

@@ -1,12 +1,11 @@
-package br.com.snowman.dao;
+package br.com.snowman.adapter;
 
 import java.io.Serializable;
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 
 
-public class TouristSpotDao implements Serializable {
+public class TouristSpotAdapter implements Serializable {
 	
 	/**
 	 * 
@@ -14,7 +13,7 @@ public class TouristSpotDao implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	
-	public TouristSpotDao() {}
+	public TouristSpotAdapter() {}
 	
 	public String getName() {
 		return name;

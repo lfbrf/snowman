@@ -14,6 +14,14 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "upvote")
 public class Upvote {
+	public Upvote(TouristSpot tourist, User user, boolean up) {
+		this.tourist = tourist;
+		this.user = user;
+		this.up = up;
+	}
+	
+	public Upvote() {}
+
 	public TouristSpot getTourist() {
 		return tourist;
 	}
@@ -28,6 +36,17 @@ public class Upvote {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+	
+	@Column(name = "up")
+	private boolean up;
+
+	public boolean isUp() {
+		return up;
+	}
+
+	public void setUp(boolean up) {
+		this.up = up;
 	}
 
 	@Id

@@ -1,6 +1,5 @@
 package br.com.snowman.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -37,6 +36,7 @@ public class TouristSpotPicture {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="tourist_picture_id")
 	private Long id;
 	
 	@ManyToOne( fetch = FetchType.LAZY)

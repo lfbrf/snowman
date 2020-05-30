@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.snowman.model.TouristSpotPicture;
 @Repository
 public interface TouristSpotPictureRepository extends JpaRepository<TouristSpotPicture, Long> {
-
+	
 	@Modifying
 	@Query(value = "insert into tourist_picture (picture, tourist_id, user_id) VALUES (:picture,:tourist_id,:user_id)", nativeQuery = true)
 	@Transactional

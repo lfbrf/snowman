@@ -19,26 +19,25 @@
 </head>
 
 <body>
-
 	<div id="header"></div>
 	<div class="container">
 
 
 		<header class="jumbotron my-4">
-			<h1 class="display-3">Seja bem vindo(a)</h1>
+			<h2 class="display-3">Seja bem vindo(a)</h2>
 			<p class="lead" id="userName">Log com sua conta do facebook para
 				todas as funcionalidades</p>
+				
+			<h4 th:if="${auth}">Painel de filtros</h4>	
 			<div th:if="${auth}">
-				<button onclick="refreshIdCategory(); initAutocomplete()"
-					type="button" class="btn btn-primary" data-toggle="modal"
-					style="margin: 20px; float:right;" data-target="#newTouristModal">Cadastrar
-					Ponto Turístico</button>
+				<button onclick="refreshIdCategory(); initAutocomplete()" type="button" class="btn btn-primary col-md-3 offset-md-9" 
+				data-toggle="modal" data-target="#newTouristModal">Cadastrar Ponto Turístico</button>
 
 
 				<div role="form">
 					<div class="form-group">
 						<label>Buscar pontos turísticos próximos à</label> <input
-							type="text" class="form-control" id="searchNear" />
+							type="text" class="form-control" id="searchNear" onchange="onChangeSearch()" />
 					</div>
 					<div class="text-right">
 						<button class="btn-info btn" onclick="retriveNearPlaces();">Buscar</button>
@@ -62,6 +61,14 @@
 					<input type="checkbox" class="custom-control-input" onclick="searchUser();"
 						id="searchByUser"> <label class="custom-control-label"
 						for="searchByUser">Não|Sim</label>
+				</div>
+				
+				<label style="margin-top: 30px;">Exibir somente meu pontos turisticos favoritos</label>
+				<div class="custom-control custom-switch">
+
+					<input type="checkbox" class="custom-control-input" onclick="searchFavorite();"
+						id="searchByFavorite"> <label class="custom-control-label"
+						for="searchByFavorite">Não|Sim</label>
 				</div>
 
 			</div>
@@ -98,7 +105,7 @@
 
 		</div>
 		<div class="row text-center"
-			th:if="${allTouristPost != null and searchFilter == false }">
+			th:if="${allTouristPost != null and (searchFilter == false )}">
 			<div th:each="tourist : ${allTouristPost}">
 
 				<div th:id="listTouristId + ${tourist.id}"
@@ -125,10 +132,37 @@
 			</div>
 
 		</div>
-		<!-- /.row -->
+		
+		<div class="row text-center"
+			th:if="${allTouristPost != null and (searchFilter == true and searchName.size() == 0) } ">
+			<div th:each="tourist : ${allTouristPost}">
+
+				<div th:id="listTouristId + ${tourist.id}" style="display:none;"
+					class="col-lg-10 col-md-10 mb-12">
+					<span style="display: none;" th:id="listTouristId + ${tourist.id}"
+						th:text="${tourist.id}"></span>
+					<div class="card h-10">
+						<img class="card-img-top" style="width: 150px; height: 150 px;"
+							th:src="${tourist.mainPicture}" alt="">
+						<div class="card-body">
+							<h4 class="card-title">
+								<span th:text="${tourist.name}"></span>
+							</h4>
+							<p class="card-text">
+								<span th:text="${tourist.category.name}"></span>
+							</p>
+						</div>
+						<div class="card-footer">
+							<a th:href="turistico + '?id=' + ${tourist.id}"
+								class="btn btn-primary">Ver mais detalhes</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
 
 	</div>
-	<!-- /.container -->
 
 
 

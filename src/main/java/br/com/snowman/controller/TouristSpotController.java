@@ -2,6 +2,10 @@ package br.com.snowman.controller;
 
 
 
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,6 +15,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.rowset.serial.SerialBlob;
+import javax.sql.rowset.serial.SerialException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,13 +26,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import br.com.snowman.dao.TouristSpotDao;
+import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
+import br.com.snowman.adapter.TouristSpotAdapter;
 import br.com.snowman.domain.UserDetails;
 import br.com.snowman.model.Category;
 import br.com.snowman.model.TouristSpot;
-import br.com.snowman.model.TouristSpotPicture;
 import br.com.snowman.model.User;
 import br.com.snowman.repository.CategoryRepository;
 import br.com.snowman.repository.TouristSpotRepository;
@@ -58,7 +64,27 @@ public class TouristSpotController {
 
     	model = initModel(model, session);
     	System.out.println("CHAMA AQUI S ++++++++++ +++");
+    	
         return "index";
+    }
+    
+   
+    
+    @GetMapping("/buscafavoritos")
+    public   String  searchFavority(Model model, HttpSession session) {
+    	if (!homeService.isAuthenticated())
+    		return "error";
+    	model = initModel(model, session);
+    	UserDetails ud = homeService.getCurrentUserInSession();
+		User user = userRepository.findUserByFaceId(ud.getId());
+    	List<TouristSpot> tourist = touristSpotRepository.findTouristByFavority(user.getId());
+    	model.addAttribute("searchName", tourist);
+    	
+    	model.addAttribute("searchFilter", true);
+    	System.out.println("CHAMA AQUI S ++++++++++ +++ buscafavoritos "); 
+    	
+    	return "index";
+    	
     }
     
     @GetMapping("/buscanome")
@@ -68,7 +94,7 @@ public class TouristSpotController {
     	model.addAttribute("searchFilter", true);
     	System.out.println("CHAMA AQUI S ++++++++++ +++"); 
     	if (homeService.isAuthenticated())
-    		return "/";
+    		return "index";
     	return "error";
     }
     
@@ -85,21 +111,18 @@ public class TouristSpotController {
         	model.addAttribute("searchFilter", true);
         	System.out.println("CHAMA AQUI S ++++++++++ +++"); 
         	
-        	return "/";
+        	return "index";
     	}
     	
     }
     
-
-    
-   
-    
     public Model initModel(Model model, HttpSession session ) {
     	model.addAttribute("auth", homeService.isAuthenticated());
     	
-    	TouristSpotDao touristSpotDao = new TouristSpotDao();
+    	TouristSpotAdapter touristSpotDao = new TouristSpotAdapter();
     	Set<Category> allCategories = new HashSet<Category>(categoryRepository.findAll());
      	Set<TouristSpot> allTouristSpot = new HashSet<TouristSpot>(touristSpotRepository.findAll());
+
      	List<TouristSpot> tourists = touristSpotRepository.findAll();
      	
      	if (tourists != null && tourists.size() > 0) {
@@ -146,7 +169,7 @@ public class TouristSpotController {
     
     
     @PostMapping(value={"", "/"})
-    public  String createCategory( @ModelAttribute("tourist") TouristSpotDao touristSpot, Model model, HttpSession session, HttpServletResponse response) {
+    public  String createCategory( @ModelAttribute("tourist") TouristSpotAdapter touristSpot, Model model, HttpSession session, HttpServletResponse response) {
     	System.out.println("123");
     	UserDetails ud = returnUdIfAuth(session);
     	if (ud == null )
@@ -164,6 +187,32 @@ public class TouristSpotController {
     		result.setName("Erro");
     	else { 
     		Category c = categoryRepository.findCategoryById(touristSpot.getIdCategory());
+    		System.out.println(touristSpot.getPicture());
+    		
+    		String separator =",";
+    		int sepPos = touristSpot.getPicture().indexOf(separator);
+    		String[] str = touristSpot.getPicture().split(separator, 2);
+    		byte[] decodedByte = Base64.getDecoder().decode(str[1]);
+    		
+    		 
+    		System.out.println("UM POCO ANTES");
+    		System.out.println("TIPO ENCONTRADO " + str[0]);
+    		try {
+    			System.out.println("VEM AQUI ######  ");
+				Blob b = new SerialBlob(decodedByte);
+			     
+				String encoded = Base64.getEncoder().encodeToString(b.getBytes(1l, (int)b.length()));
+				System.out.println("BASE  64 DEPOIS:: ");
+				System.out.println(encoded);
+			} catch (SerialException e) {
+				System.out.println("FIRST EXC");
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				System.out.println("SECOND EXC");
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     		result.setName(touristSpot.getName());
     		System.out.println("ANTES DO ERRO ;;;; ;;;; ");
     	    result.setMainPicture(touristSpot.getPicture());

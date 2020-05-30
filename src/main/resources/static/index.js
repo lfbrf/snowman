@@ -15,7 +15,7 @@ function openTourist(id){
   }
   
   function checkField(campo){
-	  if ($(campo + "").val() == ""){
+	  if ($("#" + campo ).val() == "" ){
 		  showMessage("error", "Faltou preencher um ou mais campos", 2000);
 		  $("#closeModal").click();
 		  return false
@@ -34,13 +34,18 @@ function openTourist(id){
   
   function newTourist(){
 	  console.log($("#imgTouristUpload").val());
-	// valida campos
-	  if (checkField("imgTouristUpload") && checkField("name") && checkField("latLocalization") 
-			  && checkField("longLocalization") && checkField("longLocalization")){
+	// valida campos checkField("imgTouristUpload") 
+	  if ($("#imgTouristUpload").attr('src') == ""){
+		  showMessage("error", "Faltou preencher um ou mais campos", 2000);
+		  $("#closeModal").click();
+		  return false
+	  }
+	  if (checkField("name") && checkField("latLocalization") 
+			  && checkField("longLocalization")){
 
 		 
 		   $("#picture").val(  $('#imgTouristUpload').attr('src'));
-		 
+		   showMessage("success", "Cadastrado com sucesso", 2000);
 
 		   $("#saveTourist").click();
 		 
@@ -51,6 +56,11 @@ function openTourist(id){
 	function initAutocomplete() {
 		$("#latLocalization").val("");
 		$("#longLocalization").val("");
+		$("#name").val("");
+		$("#latLocalization").val("");
+		$("longLocalization").val("");
+		$("#touristLocation").val();
+		$("#" + "imgTouristUpload" ).attr('src', '');
 		var place = ""; 
 		    autocomplete = new google.maps.places.Autocomplete(
 				(document.getElementById('touristLocation')),
@@ -82,14 +92,24 @@ function openTourist(id){
 	}
 	
 	function fillInAddressSearch() {
+		console.log("fillInAddressSearch");
 		place = autocomplete.getPlace();
 		lngSearch = place.geometry.location.lng();
 		latSearch = place.geometry.location.lat();
+		console.log("no fim fill");
 		if ($("#searchNear").val() == ""){
 			latSearch = "";
 			lngSearch = "";
 		}
      }
+	
+	function onChangeSearch(){
+		console.log("onChangeSearch");
+		if ($("#searchNear").val() == ""){
+			latSearch = "";
+			lngSearch = "";
+		}
+	}
 	
 	function retriveNearPlaces(){
 		arrayIdToHide = [];
@@ -121,5 +141,9 @@ function openTourist(id){
 	
 	function searchByName(){
 		window.location.href = "buscanome?nome=" + $("#searchName").val();
+	}
+	
+	function searchFavorite(){
+		window.location.href = "buscafavoritos";
 	}
   
