@@ -1,4 +1,4 @@
-package br.com.snowman.service;
+package br.com.snowman.service.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
@@ -20,13 +19,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-import br.com.snowman.controller.HomeController;
 import br.com.snowman.domain.AccessToken;
 import br.com.snowman.domain.AccessTokenData;
 import br.com.snowman.domain.Data;
 import br.com.snowman.domain.UserDetails;
 import br.com.snowman.model.User;
 import br.com.snowman.repository.UserRepository;
+import br.com.snowman.service.HomeService;
+/**
+ * @author luiz
+ * Implementação da interface HomeService
+ */
 @Service
 public class HomeServiceImpl implements HomeService {
 	@Autowired
@@ -60,12 +63,14 @@ public class HomeServiceImpl implements HomeService {
 		return UUID.randomUUID().toString();
 	}
 	
+	// Retorna o usuário da sessão com o token salvo na mesma
 	public UserDetails getCurrentUserInSession() {
 		HttpSession session = context.getSession();
 		Cookie cookie = (Cookie) session.getAttribute("cookieSession");
 		return getUserDetailsFromAccessToken(cookie.getValue());
 	}
 
+	// Verifica se usuário está autenticado na sessão
 	public boolean isAuthenticated() {
 		HttpSession session = context.getSession();
 		Cookie cookie = (Cookie) session.getAttribute("cookieSession");
@@ -75,8 +80,7 @@ public class HomeServiceImpl implements HomeService {
 		return false;
 	}
 	
-	
-
+	// Consulta se o token de acesso está autenticado
 	public boolean userIsAuthenticated(String access_token) {
 		AccessTokenData accessTokenData;
 		try {
@@ -85,15 +89,17 @@ public class HomeServiceImpl implements HomeService {
 			LOGGER.warn(e.getMessage());
 			return false;
 		}
-
+		// Se não ocorreu exception verifico se o token é válido e retorno
 		return !(!accessTokenData.isIs_valid() || accessTokenData.getApp_id() != Long.valueOf(APP_ID));
 	}
 
+	// Verifica o token de acesso
 	public AccessTokenData inspectAccessToken(String accessToken, String appAccessToken) {
 		Map<String, String> urlparams = new HashMap<>();
 		urlparams.put("input_token", accessToken);
 		urlparams.put("access_token", appAccessToken);
 		try {
+			// chama o debug token
 			return restTemplate.getForObject(
 					"https://graph.facebook.com/debug_token?input_token={input_token}&access_token={access_token}",
 					Data.class, urlparams).getData();
@@ -103,6 +109,7 @@ public class HomeServiceImpl implements HomeService {
 		}
 	}
 
+	// Monta url e retorna o Token de acesso na API do faceook
 	public AccessToken getAccessTokenFromCode(String code) {
 		Map<String, String> urlparams = new HashMap<>();
 		urlparams.put("client_id", APP_ID);
@@ -121,13 +128,14 @@ public class HomeServiceImpl implements HomeService {
 		}
 	}
 
+	// Consulta na API do facebook o usuário através de um token
 	public UserDetails getUserDetailsFromAccessToken(String accessToken) {
 
 		Map<String, String> urlparams = new HashMap<>();
 		urlparams.put("access_token", accessToken);
 		urlparams.put("fields", "id,name,email");
 		LOGGER.info("Retrieving user details with {} and {}", accessToken, urlparams);
-		try {
+		try { // Fazendo a chamada na api com o accessToken para retorno do UserDetails
 			return restTemplate
 					.getForObject("https://graph.facebook.com/v2.9/me/?access_token={access_token}&fields={fields}",
 							UserDetails.class, urlparams);
@@ -139,14 +147,14 @@ public class HomeServiceImpl implements HomeService {
 			throw new RuntimeException(String.valueOf(exception.getStatusCode()));
 		}
 	}
-
+	// Responsável por gerar um access token
 	public String getAppAccessToken() {
 		Map<String, String> urlparams = new HashMap<>();
 		urlparams.put("client_id", APP_ID);
 		urlparams.put("client_secret", APP_SECRET);
 		LOGGER.info("Retrieving app access token");
 
-		try {
+		try { // Gerando o access token chamadno a API
 			String json = restTemplate.getForObject(
 					"https://graph.facebook.com/oauth/access_token?client_id={client_id}&client_secret={client_secret"
 							+ "}&grant_type=client_credentials",
@@ -157,13 +165,19 @@ public class HomeServiceImpl implements HomeService {
 			throw new RuntimeException(String.valueOf(exception.getStatusCode()));
 		}
 	}
-
+	
+	// Ao autenticar verifica se o usuário já foi salvo no banco 
+	// Caso não encontre um registro então salva o mesmo
 	@Override
-	public void saveUserIfNotExists(String accessToken, UserDetails userDetails) {
+	public void saveUserIfNotExists( UserDetails userDetails) {
 		User u = userRepository.findUserByFaceId(userDetails.getId());
+		
 		if (u != null && u.getName() != null) 
 			return ;
 		else
 			userRepository.save(new User(userDetails.getName(), userDetails.getEmail(), userDetails.getId(), true));
 	}
+
+
+	
 }

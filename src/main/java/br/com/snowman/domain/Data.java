@@ -1,5 +1,9 @@
 package br.com.snowman.domain;
 
+/**
+ * @author luiz
+ *
+ */
 public class Data {
     AccessTokenData data;
 

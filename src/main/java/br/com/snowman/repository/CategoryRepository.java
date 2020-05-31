@@ -6,6 +6,10 @@ import org.springframework.stereotype.Repository;
 import br.com.snowman.model.Category;
 
 
+/**
+ * @author luiz
+ * Repositório da categoria
+ */
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 	@Query(value = "SELECT * FROM category WHERE name = ?1 LIMIT 1", nativeQuery = true)

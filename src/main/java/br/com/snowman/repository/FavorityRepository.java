@@ -9,12 +9,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.snowman.model.Favority;
 
+/**
+ * @author luiz
+ * 
+ * Repositŕorio dos favoritos
+ */
 @Repository
 public interface FavorityRepository extends JpaRepository<Favority, Long> {
-	
+	//Query para buscar favorito po ponto turístico e usuário
 	@Query(value = "SELECT * FROM favority WHERE tourist_id = ?1 and user_id = ?2  LIMIT 1", nativeQuery = true)
 	public Favority findFavorityByTouristUser(@Param("tourist_id") long touristId, @Param("user_id")  long userId);
 	
+	//Atualiza favorito quando o usuário deixa de favoritar um ponto turístico
 	@Modifying 
 	@Query(value = " update favority set favorited = :favorited where tourist_id = :tourist_id and user_id = :user_id ", nativeQuery = true)
 	@Transactional

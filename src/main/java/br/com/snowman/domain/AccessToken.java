@@ -1,5 +1,9 @@
 package br.com.snowman.domain;
 
+/**
+ * @author luiz
+ *
+ */
 public class AccessToken {
     private String access_token;
     private long expires_in;

@@ -11,7 +11,7 @@ function openTourist(id){
 
   var allTourists = "";
   function refreshIdCategory(){
-	  $("#idCategory").val($("#category").val());
+	  $(".categoryIdToSelect").val($("#category").val());
   }
   
   function checkField(campo){
@@ -44,7 +44,7 @@ function openTourist(id){
 			  && checkField("longLocalization")){
 
 		 
-		   $("#picture").val(  $('#imgTouristUpload').attr('src'));
+		   $("#base64").val(  $('#imgTouristUpload').attr('src'));
 		   showMessage("success", "Cadastrado com sucesso", 2000);
 
 		   $("#saveTourist").click();

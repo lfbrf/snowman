@@ -25,6 +25,10 @@ import br.com.snowman.domain.AccessTokenData;
 import br.com.snowman.domain.UserDetails;
 import br.com.snowman.service.HomeService;
 
+/**
+ * @author luiz
+ * Controller inicial usado para integrar autenticação do facebook
+ */
 @RestController
 //@Controller
 public class HomeController {
@@ -53,7 +57,8 @@ public class HomeController {
     
     
     
-
+    // Consome serviço do facebook para consultar se existe um token válido para acesso
+    //  O mesmo é adicionado no cookie e na sessão para futuras consultas junto com seus possíveis status
     @GetMapping("/facebook/login")
     public ResponseEntity<?> facebookLogin(@RequestParam("code") String code, @RequestParam("state") String state,
         HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest) throws IOException {
@@ -64,8 +69,6 @@ public class HomeController {
             return ResponseEntity.status(Integer.parseInt(e.getMessage())).build();
         }
 
-        LOGGER.info("Access token = {}", accessToken);
-
         String appAccessToken;
         try {
             appAccessToken = homeService.getAppAccessToken();
@@ -74,7 +77,6 @@ public class HomeController {
         }
 
         AccessTokenData accessTokenData = homeService.inspectAccessToken(accessToken.getAccess_token(), appAccessToken);
-        LOGGER.info("Verify token = {}", accessTokenData);
         if (!accessTokenData.isIs_valid() || accessTokenData.getApp_id() != Long.valueOf(APP_ID)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -98,10 +100,11 @@ public class HomeController {
         session.setAttribute("cookieSession", cookie);
         httpServletResponse.addCookie(cookie);
         httpServletResponse.sendRedirect(REDIRECT_URI);
-        homeService.saveUserIfNotExists(accessToken.getAccess_token(), userDetails);
+        homeService.saveUserIfNotExists(userDetails);
         return ResponseEntity.ok().build();
     }
 
+    // Verifica se usuário está logado
     @GetMapping("/facebook/auth")
     public boolean isAuthenticated(@CookieValue(value = "access_token", required = false) String access_token, HttpServletResponse response) {
     	
@@ -110,7 +113,8 @@ public class HomeController {
         }
         return homeService.userIsAuthenticated(access_token);
     }
-
+    
+    // Faz logout do usuário
     @GetMapping("/facebook/logout")
     public ResponseEntity<?> logout(@CookieValue(value = "access_token") String access_token,
         HttpServletResponse httpServletResponse) {
@@ -118,17 +122,19 @@ public class HomeController {
         HttpSession session = context.getSession();
         session.setAttribute("cookieSession", cookie);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        cookie.setSecure(true); 
         cookie.setMaxAge(0);
         httpServletResponse.addCookie(cookie);
         return ResponseEntity.ok().build();
     }
 
+    // Retorna os detalhes do usuário do facebook
     @GetMapping("/facebook/userinfo")
     public UserDetails getUserDetails(@CookieValue("access_token") String access_token) {
         return homeService.getUserDetailsFromAccessToken(access_token);
     }
 
+    // Monta url para envio da solicitação das informações na API do facebook
     @GetMapping("/facebook/getLoginUri")
     public String getLoginUri() {
         String uri = "https://www.facebook.com/v2.9/dialog/oauth?client_id=" + APP_ID + "&redirect_uri=" + "https://localhost:8445/"

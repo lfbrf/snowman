@@ -1,5 +1,7 @@
 package br.com.snowman.model;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,14 +13,18 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * @author luiz
+ * A tabela favorito pode ter vários pontos turísticos e vários usuários
+ */
 @Entity
 @Table(name = "favority")
-public class Favority implements java.io.Serializable {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "favority_id")
-	private Long id;
-
+public class Favority implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	public Favority(TouristSpot tourist, User user,boolean favorited) {
 		this.favorited = favorited;
 		this.user = user;
@@ -58,6 +64,12 @@ public class Favority implements java.io.Serializable {
 	public void setFavorited(boolean favorited) {
 		this.favorited = favorited;
 	}
+	
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "favority_id")
+	private Long id;
 
 	@Column(name = "favorited")
 	private boolean favorited;

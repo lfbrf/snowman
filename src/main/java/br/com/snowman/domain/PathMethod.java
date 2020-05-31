@@ -2,6 +2,10 @@ package br.com.snowman.domain;
 
 import org.eclipse.jetty.http.HttpMethod;
 
+/**
+ * @author luiz
+ *
+ */
 public class PathMethod {
     private String path;
     private HttpMethod method;

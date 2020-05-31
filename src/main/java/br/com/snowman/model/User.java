@@ -12,6 +12,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+/**
+ * @author luiz
+ * Usuários podem favoritar, enviar fotos e votar em pontos turísticos
+ */
 @Entity
 @Table(name = "user")
 public class User  implements Serializable{
@@ -19,6 +23,15 @@ public class User  implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	public User() {}
+	
+	public User(String name, String email,  String faceId, boolean status) {
+		this.name = name;
+		this.email = email;
+		this.faceId = faceId;
+		this.status = status;
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -79,15 +92,7 @@ public class User  implements Serializable{
 	public void setFaceId(String faceId) {
 		this.faceId = faceId;
 	}
-
-	public User() {}
-	
-	public User(String name, String email,  String faceId, boolean status) {
-		this.name = name;
-		this.email = email;
-		this.faceId = faceId;
-		this.status = status;
-	} 
+ 
 
 	@Column(nullable = true) 
 	private String email;

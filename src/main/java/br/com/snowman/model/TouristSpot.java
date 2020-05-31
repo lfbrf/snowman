@@ -1,9 +1,7 @@
 package br.com.snowman.model;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,15 +11,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 
+/**
+ * @author luiz
+ * Um ponto turístico tem um autor e uma categoria
+ * Além disso, pode ter muitas fotos e muitas reações (favorito ou votos)
+ */
 @Entity
 @Table(name = "tourist")
 public class TouristSpot implements Serializable {
@@ -31,12 +32,24 @@ public class TouristSpot implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public TouristSpot(String name, boolean status, String mainPicture,  Category category, User user) {
+	public TouristSpot(String name, boolean status, byte[] mainPicture,  Category category, User user) {
 		this.name = name;
 		this.status = status;
 		this.mainPicture = mainPicture;
 		this.category = category;
 		this.user = user;
+	}
+	
+	public TouristSpot(String name, byte[] mainPicture,String nameMainPicture, boolean status, 
+			User user ,  Category category, String latLocalization, String longLocalization) {
+		this.name = name;
+		this.mainPicture = mainPicture;
+		this.nameMainPicture = nameMainPicture;
+		this.status = status;
+		this.user = user;
+		this.category = category;
+		this.latLocalization = latLocalization;
+		this.longLocalization = longLocalization;
 	}
 	
 	public TouristSpot() {}
@@ -69,13 +82,6 @@ public class TouristSpot implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "tourist_id")
-	private Long id;
-	
-	
 	
 	public Long getId() {
 		return id;
@@ -84,23 +90,6 @@ public class TouristSpot implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
-	@Column(nullable = false)
-	@NotBlank
-	private String name;
-	
-	@Column() 
-	private boolean status;
-	
-
-	@Column() 
-	private String latLocalization;
-	
-	@Column() 
-	private String longLocalization;
-	
-	@Column() 
-	private long numberVotes;
 	
 	public String getLatLocalization() {
 		return latLocalization;
@@ -117,31 +106,15 @@ public class TouristSpot implements Serializable {
 	public void setLongLocalization(String longLocalization) {
 		this.longLocalization = longLocalization;
 	}
-
-	public long getNumberVotes() {
-		return numberVotes;
-	}
-
-	public void setNumberVotes(long numberVotes) {
-		this.numberVotes = numberVotes;
-	}
-	@Lob
-    @Column
-    private String mainPicture;
 	
-	public String getMainPicture() {
+	public byte[] getMainPicture() {
 		return mainPicture;
 	}
 
-	public void setMainPicture(String picture) {
+	public void setMainPicture(byte[] picture) {
 		this.mainPicture = picture;
 	}
 
-	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Category category;
-	
-	
 	public Category getCategory() {
 		return category;
 	}
@@ -149,16 +122,6 @@ public class TouristSpot implements Serializable {
 	public void setCategory(Category category) {
 		this.category = category;
 	}
-	
-	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-	
-	 
-	@OneToMany(mappedBy="tourist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<TouristSpotPicture> touristPictures;
-	
 	
 	public List<Favority> getFavority() {
 		return favority;
@@ -168,23 +131,14 @@ public class TouristSpot implements Serializable {
 		this.favority = favority;
 	}
 
-	public List<Favority> getUpvote() {
+	public List<Upvote> getUpvote() {
 		return upvote;
 	}
 
-	public void setUpvote(List<Favority> upvote) {
+	public void setUpvote(List<Upvote> upvote) {
 		this.upvote = upvote;
 	}
-
-	@OneToMany(mappedBy="tourist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Favority> favority;
 	
-	@OneToMany(mappedBy="tourist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Favority> upvote;
-	
-	
-	
-
 	public List<TouristSpotPicture> getTouristPictures() {
 		return touristPictures;
 	}
@@ -193,8 +147,66 @@ public class TouristSpot implements Serializable {
 		this.touristPictures = touristPictures;
 	}
 	
-	
-	
+	public String getBase64() {
+		return base64;
+	}
 
+	public void setBase64(String base64) {
+		this.base64 = base64;
+	}
+	
+	public String getNameMainPicture() {
+		return nameMainPicture;
+	}
+
+	public void setNameMainPicture(String nameMainPicture) {
+		this.nameMainPicture = nameMainPicture;
+	}
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "tourist_id")
+	private Long id;
+	
+	@Column(nullable = false)
+	@NotBlank
+	private String name;
+	
+	@Column() 
+	private boolean status;
+
+	@Column() 
+	private String latLocalization;
+	
+	@Column() 
+	private String longLocalization;
+
+	@Lob
+    @Column
+    @NotBlank
+    private byte[] mainPicture;
+	
+	@Column()
+	@NotBlank
+	private String nameMainPicture; 
+	
+	@Transient
+	private String base64;
+
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Category category;
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+	 
+	@OneToMany(mappedBy="tourist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<TouristSpotPicture> touristPictures;
+	
+	@OneToMany(mappedBy="tourist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Favority> favority;
+	
+	@OneToMany(mappedBy="tourist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Upvote> upvote;
 	
 }

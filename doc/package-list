@@ -1,0 +1,6 @@
+br.com.snowman
+br.com.snowman.controller
+br.com.snowman.domain
+br.com.snowman.model
+br.com.snowman.repository
+br.com.snowman.service

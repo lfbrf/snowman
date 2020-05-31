@@ -2,22 +2,22 @@ package br.com.snowman.model;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+/**
+ * @author luiz
+ * A categoria está relacionada com o ponto turístico
+ * As categorias inicias foram definidas para inicializar junto com o banco (ver data.sql)
+ */
 @Entity
 @Table(name = "category")
 public class Category  implements Serializable{
-	
 	/**
 	 * 
 	 */
@@ -33,11 +33,6 @@ public class Category  implements Serializable{
 		this.name = name;
 		this.status = status;
 	}
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "category_id")
-	private Long id;
 
 	public Long getId() {
 		return id;
@@ -62,6 +57,12 @@ public class Category  implements Serializable{
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
+	
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "category_id")
+	private Long id;
 
 	@Column(nullable = false)
 	@NotBlank

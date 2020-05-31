@@ -34,7 +34,7 @@
 			<div class="row">
 			<img class="card-img-top"
 				style="width: 350px; height: 350 px; display: block; margin: auto auto;"
-				th:src="${touristById.mainPicture}" alt="">
+				th:src="${touristById.base64}" alt="">
 			</div>
 			<div class="row" th:if="${auth}">
 				<div class="col-md-4"></div>
@@ -99,7 +99,7 @@
 			<div class="row">
 					<div class="col-md-3 p-3" th:each="tourist : ${touristById.touristPictures}"
 					th:if="${currentUserId} != -1 and ( ${currentUserId} eq ${tourist.user.id} )">
-						<img th:src="${tourist.picture}" alt="inn_logo"
+						<img th:src="${tourist.base64}" alt="inn_logo"
 							style="height: 130px; width: 100%;">
 						<p th:onclick="|deletePicture('${tourist.id}')|">
 							<i class="icon-remove"
@@ -120,7 +120,7 @@
 				<div class="col-md-3 p-3"
 					th:each="tourist : ${touristById.touristPictures}"
 					th:if="${currentUserId} == -1 or ( ${currentUserId} != ${tourist.user.id} )">
-					<img th:src="${tourist.picture}" alt="inn_logo"
+					<img th:src="${tourist.base64}" alt="inn_logo"
 						style="height: 130px; width: 100%;">
 				</div>
 			</div>
@@ -166,7 +166,7 @@
 					<img id='imgTouristUpload'
 						style="width: 150px; height: 150px; display: block; margin: auto auto;"
 						onchange="setPicValue()" /> <input type="text"
-						class="form-control" th:field="*{picture}" style="display: none;" />
+						class="form-control" th:field="*{base64}" style="display: none;" />
 				</div>
 				<div class="input-group">
 					<span class="input-group-btn"> <span
@@ -234,7 +234,7 @@ $(function(){
  }
  
  function setPicValue(){
-	 $("#picture").val($("#imgTouristUpload").attr('src'));
+	 $("#base64").val($("#imgTouristUpload").attr('src'));
  }
 
  function latLongToAddress(){

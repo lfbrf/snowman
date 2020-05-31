@@ -1,9 +1,4 @@
 package br.com.snowman.controller;
-
-import javax.servlet.http.Cookie;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.com.snowman.model.Category;
-import br.com.snowman.repository.CategoryRepository;
-import br.com.snowman.repository.TouristSpotRepository;
+import br.com.snowman.service.CategoryService;
 import br.com.snowman.service.HomeService;
 
+/**
+ * @author luiz
+ * Controller de categoria
+ */
 @Controller
 @RequestMapping("/categoria")
 public class CategoryController {
@@ -27,64 +25,31 @@ public class CategoryController {
 	HomeService homeService;
 	
 	@Autowired
-    CategoryRepository categoryRepository;
-	
-	@Autowired
-    TouristSpotRepository touristSpotRepository;
-	
-	@Autowired
-	private HttpServletRequest context;
-	
+	CategoryService categoryService;
 
+	// Lista todas categorias
     @GetMapping(value={"", "/"})
     public String  listCategories(Model model) {
     	model = initCategory(model);
-    
         return "category";
     } 
     
+    // Inicia os models
     public Model initCategory(Model model) {
-    	model.addAttribute("allCategories", categoryRepository.findAll() + "");
-    	model.addAttribute("categories", categoryRepository.findAll());
+    	model.addAttribute("allCategories", categoryService.findAll() + "");
+    	model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("auth", homeService.isAuthenticated());
         model.addAttribute("category", new Category());
         return model;
     }
     
-    
+    // Cadastra nova categoria
     @PostMapping(value={"", "/"})
     public  String createCategory( @Valid @ModelAttribute("category") Category category, Model model) {
-
-    	Category result = new Category();
-    	Category search = new Category();
-    	
-    	search = categoryRepository.findCategoryByName(category.getName());
-    	if (!homeService.isAuthenticated() || (search != null && search.getId() != null))
-    		result =  new Category ("Erro", false);
-    	else
-    		result =  categoryRepository.save(category);
-    	//model = initCategory(model);
-    	model.addAttribute("result", result);
+    	categoryService.saveCategoryIfNotExists(category);
+    	model.addAttribute("result", category);
     	return "redirect:/categoria";
     }
-    
-    @GetMapping(value= "/*")
-    public String  listCategoryByFilter(Model model) {
-    	System.out.println("It Works well /*");
-    	model = initCategory(model);
-        return "category";
-    }
-    
-    
   
-    /*
-    public boolean isAuthenticated() {
-    	HttpSession session = context.getSession();
-    	Cookie cookie = (Cookie) session.getAttribute("cookieSession");
-    	if (cookie!= null) {
-    		  return homeService.userIsAuthenticated(cookie.getValue());
-    	}
-    	return false;
-    }*/
-
+ 
 }
