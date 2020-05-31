@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Ponto Turístico</title>
+<!-- Bootstrap core CSS -->
+<link href="../bootstrap.min.css" rel="stylesheet">
+
+<!-- Custom styles for this template -->
+<link href="../main.css" rel="stylesheet">
+
+<link href="../imagestyle.css" rel="stylesheet">
+
+<link
+	href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
+	rel="stylesheet">
+</head>
+<body>
+	<div id="header"></div>
+	<div id="fb-root"></div>
+	<!-- Usar o FB.logut() para derruba um usuário -->
+	<script async defer crossorigin="anonymous"
+		src="https://connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v7.0&appId=325921808404719&autoLogAppEvents=1"></script>
+	<div class="container">
+
+
+		<h3>
+			Ponto turístico: <span th:text="${touristById.name}" th:remove="tag"></span>
+		</h3>
+		<div id="header"></div>
+		<div class="form-group">
+			<!-- pic -->
+			<h5>Foto principal:</h5>
+			<div class="row">
+			<img class="card-img-top"
+				style="width: 350px; height: 350 px; display: block; margin: auto auto;"
+				th:src="${touristById.base64}" alt="">
+			</div>
+			<div class="row" th:if="${auth}">
+				<div class="col-md-4"></div>
+				<div class="col-md-2"> 
+					<p th:if="${isFavority} == false " th:onclick="|favorityTourist()|" style="cursor: pointer;">
+									Curtir<i class="icon-thumbs-up" ></i>
+					</p>
+					<p th:if="${isFavority} == true " th:onclick="|unfavorityTourist()|" style="cursor: pointer;">
+									Descurtir<i class="icon-thumbs-down" style="margin-left:5px;"></i>
+					</p>
+				
+				<form action="#"
+				th:action="@{/turistico/favoritar?id=} + ${touristById.id}"
+				method="post" accept-charset="UTF-8" enctype="multipart/form-data"
+				th:object="${favority}" style="display:none;">
+						<button type="submit" class="btn btn-primary"
+								id="sendFavorityTourist" style="float: right;">#</button>
+				</form>
+				
+				<form action="#"
+				th:action="@{/turistico/desfavoritar?id=} + ${touristById.id}"
+				method="post" accept-charset="UTF-8" enctype="multipart/form-data"
+				th:object="${favority}" style="display:none;">
+						<button type="submit" class="btn btn-primary"
+								id="sendUnfavorityTourist" style="float: right;">#</button>
+				</form>
+				
+				
+				</div>
+				<div class="col-md-1"></div>
+				<div class="col-md-1">
+				<p th:if="${isUp} == false " th:onclick="|upVoute()|" style="float:right; cursor: pointer;">
+								Votar<i class="icon-level-up"></i>
+				</p>
+				
+				<p th:if="${isUp} == true "  style="">
+								 Votado
+				</p>
+				
+				
+					<form action="#"
+				th:action="@{/turistico/votar?id=} + ${touristById.id}"
+				method="post" accept-charset="UTF-8" enctype="multipart/form-data"
+				th:object="${favority}" style="display:none;">
+						<button type="submit" class="btn btn-primary"
+								id="sendUpVoute" style="float: right;">#</button>
+				</form>
+				</div>
+				<div class="col-md-4"></div>  
+			</div>	
+			<div class="row" >
+			<div class="col-md-4"></div>
+				<div class="col-md-3">Número total de votos: </div>
+				<div class="col-md-1">
+				 <span th:text="${numberVotes}"  ></span>
+				</div>
+				
+			</div>
+		</div>
+		<div class="form-group">
+			<h5 th:if=" ${currentUserId} != -1 ">Fotos que adicionei</h5>
+			<div class="row">
+					<div class="col-md-3 p-3" th:each="tourist : ${touristById.touristPictures}"
+					th:if="${currentUserId} != -1 and ( ${currentUserId} eq ${tourist.user.id} )">
+						<img th:src="${tourist.base64}" alt="inn_logo"
+							style="height: 130px; width: 100%;">
+						<p th:onclick="|deletePicture('${tourist.id}')|">
+							<i class="icon-remove"
+								style="position: absolute; left: 95%; top: 15px; transform: translate(-50%, -50%); cursor: pointer;"></i>
+						</p>
+
+						<div style="display: none;">
+							<form action="#" 
+								th:action="@{/turistico/image?idTouristPicture=} + ${touristById.id} + '&idImage=' + ${tourist.id}"
+								th:method="DELETE">
+								<button type="submit" th:id="'buttonDelete' + ${tourist.id}"></button>
+							</form>
+						</div>
+					</div>
+			</div>
+			<h5>Fotos dos outros usuários</h5>
+			<div class="row">
+				<div class="col-md-3 p-3"
+					th:each="tourist : ${touristById.touristPictures}"
+					th:if="${currentUserId} == -1 or ( ${currentUserId} != ${tourist.user.id} )">
+					<img th:src="${tourist.base64}" alt="inn_logo"
+						style="height: 130px; width: 100%;">
+				</div>
+			</div>
+
+		</div>
+		<div class="form-group">
+			<label for="category">Nome</label> <input type="text"
+				class="form-control" id="nameInput" readonly="readonly"> <span
+				th:text="${touristById.name}" id="name" style="display: none;"></span>
+		</div>
+		<div class="form-group">
+			<label for="localization">Localização</label> <input type="text"
+				class="form-control" id="localization" readonly="readonly">
+			<span th:text="${touristById.latLocalization}" id="latLocalization"
+				style="display: none;"></span> <span
+				th:text="${touristById.longLocalization}" id="longLocalization"
+				style="display: none;"></span>
+
+		</div>
+		<div class="form-group">
+			<label for="localization">Categoria</label> <input type="text"
+				class="form-control" id="categoryNameInput" readonly="readonly">
+			<span th:text="${touristById.category.name}" id="categoryName"
+				style="display: none;"></span>
+		</div>
+
+		<div class="form-group">
+			<label for="category">Autor</label> <input type="text"
+				class="form-control" id="authorNameInput" readonly="readonly">
+			<span th:text="${touristById.user.name}" id="authorName"
+				style="display: none"></span>
+		</div>
+
+
+
+		<div th:if="${auth}">
+			<form action="#"
+				th:action="@{/turistico/image?id=} + ${touristById.id}"
+				method="post" accept-charset="UTF-8" enctype="multipart/form-data"
+				th:object="${touristUploadImage}">
+				<div class="form-group">
+
+					<img id='imgTouristUpload'
+						style="width: 150px; height: 150px; display: block; margin: auto auto;"
+						onchange="setPicValue()" /> <input type="text"
+						class="form-control" th:field="*{base64}" style="display: none;" />
+				</div>
+				<div class="input-group">
+					<span class="input-group-btn"> <span
+						class="btn btn-default btn-file"> Adicionar outra imagem <input
+							type="file" id="imgInp" accept="image/*">
+					</span>
+					</span> <input type="text" class="form-control" readonly>
+				</div>
+
+
+				<div class="form-group"
+					style="margin-bottom: 50px; margin-top: 10px;">
+					<div style="" class="">
+						<button type="submit" class="btn btn-primary"
+							onclick="setPicValue();" style="float: right;">Upload</button>
+					</div>
+				</div>
+			</form>
+
+
+
+			<div class="fb-comments" data-href="https://localhost:8445/turistico"
+				id="fbComent" data-numposts="5" data-width=""></div>
+
+		</div>
+
+	</div>
+	<div id="footer"></div>
+
+
+	<script src="../jquery.min.js"></script>
+	<script src="../bootstrap.bundle.min.js"></script>
+
+	<script
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCykXMI93ml2s-159-aiOPQh1_dUyoUjsg&libraries=places&callback=initMap"
+		async defer></script>
+
+	<script type="text/javascript">
+$(function(){
+	$(".fb-comments").attr('data-href', window.location.href);
+    $("#header").load("https://" + window.location.host + "/components/header.html"); 
+    $("#footer").load("https://" + window.location.host + "/components/footer.html");	
+    
+    initForm();
+
+ });
+ 
+ function unfavorityTourist(){
+	 $("#sendUnfavorityTourist").click();
+ }
+ 
+ function favorityTourist(){
+	 $("#sendFavorityTourist").click();
+ }
+ 
+ function upVoute(){
+	 $("#sendUpVoute").click();
+ }
+ 
+ function deletePicture(id){
+	 if (window.confirm("Tem certeza que deseja deletar a imagem?")) { 
+		 $("#buttonDelete" + id).click();
+	}
+
+ }
+ 
+ function setPicValue(){
+	 $("#base64").val($("#imgTouristUpload").attr('src'));
+ }
+
+ function latLongToAddress(){
+	 latlng = $("#latLocalization").text() + "," + $("#longLocalization").text();
+	 $.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latlng + "&key=AIzaSyCykXMI93ml2s-159-aiOPQh1_dUyoUjsg"
+			 , function(data, status){
+		 $("#localization").val(data.results[0].formatted_address);
+	 });
+ }
+ 
+ function initForm(){
+	 $("#nameInput").val($('#name').text());
+	 $("#localization").val($('#name').text());
+	 $("#categoryNameInput").val($('#categoryName').text());
+	 $("#authorNameInput").val($("#authorName").text());
+	 latLongToAddress();
+ }
+ 
+
+</script>
+
+</body>
+</html>

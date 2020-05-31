@@ -116,6 +116,7 @@ public class TouristSpotImpl implements TouristSpotService {
     		result.setName("Erro");
     	}
     	else if (user!= null) { 
+    		
     		Category category = categoryRepository.findCategoryById(touristSpot.getCategory().getId());
     		try {
     			// Usando os métodos da MainUtil extraio a string da base64 e o tipo de arquivo (que não é usado no byte array)

@@ -2,7 +2,7 @@ package br.com.snowman.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+ 
 import br.com.snowman.domain.UserDetails;
 import br.com.snowman.model.Favority;
 import br.com.snowman.model.TouristSpot;

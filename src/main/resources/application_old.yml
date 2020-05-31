@@ -1,0 +1,29 @@
+# todos os comentários com # devem ser substituídos por informações da api
+# Configuração usando banco de dados Mysql, usando o database snowman
+server:
+  port: ${SERVER_PORT:8445}
+  ssl:
+    key-store: classpath:snowman.p12
+    key-store-password: 123456
+    key-store-type: PKCS12
+  
+REDIRECT_URI: https://localhost:8445/
+APP_ID: #
+APP_SECRET: #
+
+
+spring:  
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/snowman?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+    username: root
+    password: felipe95
+    initialization-mode: always
+  jpa:
+    hibernate.ddl-auto: create
+    generate-ddl: true
+    show-sql: true   
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true  

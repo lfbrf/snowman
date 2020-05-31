@@ -168,7 +168,6 @@ public class HomeServiceImpl implements HomeService {
 	
 	// Ao autenticar verifica se o usuário já foi salvo no banco 
 	// Caso não encontre um registro então salva o mesmo
-	@Override
 	public void saveUserIfNotExists( UserDetails userDetails) {
 		User u = userRepository.findUserByFaceId(userDetails.getId());
 		
