@@ -1,6 +1,5 @@
 
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -11,9 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import br.com.snowman.model.Category;
 import br.com.snowman.model.TouristSpot;
-import br.com.snowman.model.Upvote;
 import br.com.snowman.model.User;
 import br.com.snowman.repository.CategoryRepository;
 import br.com.snowman.repository.FavorityRepository;
@@ -24,7 +21,6 @@ import br.com.snowman.repository.UserRepository;
 import br.com.snowman.service.HomeService;
 import br.com.snowman.service.TouristSpotService;
 import br.com.snowman.service.UserService;
-import br.com.snowman.service.impl.CategoryServiceImpl;
 import br.com.snowman.service.impl.UpvoteServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)

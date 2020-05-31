@@ -2,8 +2,6 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -21,7 +19,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.ui.Model;
 
-import br.com.snowman.domain.UserDetails;
 import br.com.snowman.model.Category;
 import br.com.snowman.model.TouristSpot;
 import br.com.snowman.model.User;
@@ -29,7 +26,6 @@ import br.com.snowman.repository.CategoryRepository;
 import br.com.snowman.repository.TouristSpotRepository;
 import br.com.snowman.repository.UserRepository;
 import br.com.snowman.service.UserService;
-import br.com.snowman.service.impl.HomeServiceImpl;
 import br.com.snowman.service.impl.TouristSpotImpl;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -172,7 +168,6 @@ Model model = new Model() {
 	
 	@Test
 	public void saveTouristIfAuthAndVaidatedShopuldReturnErroIfExists() {
-		List<TouristSpot> tourist = new ArrayList <TouristSpot>();
 		Category c = new Category();
 		User u = new User();
 		u.setId( (long) 1);
@@ -195,7 +190,6 @@ Model model = new Model() {
 	
 	@Test
 	public void saveTouristIfAuthAndVaidatedShopuldReturnNotErroIfSuccess() {
-		List<TouristSpot> tourist = new ArrayList <TouristSpot>();
 		Category c =  mock(Category.class);
 		c.setId(  (long) 1);
 		User u = new User();
