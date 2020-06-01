@@ -55,6 +55,9 @@ Observação: não foi feita requisições para o caso de busca por proximidade 
 de uma busca anterior diretamente no javascript. Demais requisiçes no link a seguir:
 https://www.getpostman.com/collections/032a2f165941f03d4206
 
+### Trelloo
+https://trello.com/b/sCeqQArD/snowman-lab
+
 ### Referente a LGPD, restringi recursos diretamente no facebook, para evitar acessos por idade e também de outros países.
 
 ### Caso tenham alguma dificuldade em rodar o projeto por gentileza me avisem
