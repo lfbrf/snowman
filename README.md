@@ -1,5 +1,13 @@
 # snowman
 
+## Simples demonstração
+
+![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/22921756/83372346-6b14b900-a39b-11ea-91cf-cbfe9b3e53b9.gif)
+
+![Uploading ezgif.com-gif-maker.gif…]()
+
+
+
 ### Tecnologias usadas:
 - Java, Spring, HTML, CSS, bootstrap, Jquery, SonarLint, Junit 5, mockito e maven.
 - Eclipse (STS) e github;
@@ -38,7 +46,8 @@ https://www.getpostman.com/collections/032a2f165941f03d4206
 ### Referente a LGPD, restringi recursos diretamente no facebook, para evitar acessos por idade e também de outros países.
 
 ### Caso tenham alguma dificuldade em rodar o projeto por gentileza me avisem
-luizfelipebasile@gmail.com
+Fico à disposição para uma apresentação e/ou sanar qualquer dúvida, obrigado
+luizfelipebasile@gmail.com | 42988313783
 
 
 
