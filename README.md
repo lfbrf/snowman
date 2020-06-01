@@ -1,5 +1,9 @@
 # snowman
 
+
+
+## Simples demonstração em gif
+
 <details><summary>Usuário Autenticado</summary>
 
 
@@ -7,10 +11,6 @@
 
 
 </details>
-
-## Simples demonstração
-
-
 
 <details><summary> Usuário não autenticado</summary>
 
