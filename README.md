@@ -30,6 +30,11 @@ Abrir no navegador https://localhost:8445
 ### OpenAPI 3.0 document
 ## Disponvel em https://localhost:8445/v3/api-docs/
 
+### Postman collection
+Observação: não foi feita requisições para o caso de busca por proximidade pois faço a lógica com resultados
+de uma busca anterior diretamente no javascript. Demais requisiçes no link a seguir:
+https://www.getpostman.com/collections/032a2f165941f03d4206
+
 ### Referente a LGPD, restringi recursos diretamente no facebook, para evitar acessos por idade e também de outros países.
 
 ### Caso tenham alguma dificuldade em rodar o projeto por gentileza me avisem
