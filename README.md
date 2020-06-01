@@ -2,10 +2,11 @@
 
 ## Simples demonstração
 
+### Usuário Autenticado
 ![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/22921756/83372346-6b14b900-a39b-11ea-91cf-cbfe9b3e53b9.gif)
 
-![Uploading ezgif.com-gif-maker.gif…]()
-
+### Usuário não autenticado
+![ezgif com-gif-maker](https://user-images.githubusercontent.com/22921756/83372380-81227980-a39b-11ea-91ef-e2df5c3bc3d3.gif)
 
 
 ### Tecnologias usadas:
