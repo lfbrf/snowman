@@ -23,7 +23,7 @@ public interface TouristSpotRepository extends JpaRepository<TouristSpot, Long> 
 	public TouristSpot findUniqueTouristSpotByName(@Param("name") String name);
 	
 	// Busca ponto turístico por usuário
-	@Query(value = "SELECT * FROM tourist WHERE user_id = ?1 LIMIT 1", nativeQuery = true)
+	@Query(value = "SELECT * FROM tourist WHERE user_id = ?1 ", nativeQuery = true)
 	public List<TouristSpot> findTouristSpotByUser(@Param("userId") long userId);
 	
 	// Buscar favoritos de um usuário específico
