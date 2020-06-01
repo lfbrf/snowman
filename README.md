@@ -1,14 +1,24 @@
 # snowman
 
-## Simples demonstração
+<details><summary>Usuário Autenticado</summary>
 
-### Usuário Autenticado
+
 ![ezgif com-gif-maker](https://user-images.githubusercontent.com/22921756/83372380-81227980-a39b-11ea-91ef-e2df5c3bc3d3.gif)
 
 
-### Usuário não autenticado
+</details>
+
+## Simples demonstração
+
+
+
+<details><summary> Usuário não autenticado</summary>
+
+
 ![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/22921756/83372346-6b14b900-a39b-11ea-91cf-cbfe9b3e53b9.gif)
 
+
+</details>
 
 ### Tecnologias usadas:
 - Java, Spring, HTML, CSS, bootstrap, Jquery, SonarLint, Junit 5, mockito e maven.
