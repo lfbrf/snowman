@@ -1,8 +1,8 @@
 # snowman
 
 ### Tecnologias usadas:
-- Java, Spring, HTML, CSS, bootstrap, Jquery, SonarLint, Junit, mockito e maven.
-- Eclipse e github;
+- Java, Spring, HTML, CSS, bootstrap, Jquery, SonarLint, Junit 5, mockito e maven.
+- Eclipse (STS) e github;
 - Integrações com Facebook (oauth) e Google API.
 
 ## Instruçes para deploy e para rodar
@@ -16,7 +16,7 @@ Adicionei um exemplo em: src/main/resources/applicattion_old.yml
 
 
 ### É preciso instalar as dependências do projeto, rodei pelo eclipse mas no terminal também funciona
-mvn clean install
+mvn clean install -DskipTests
 
 
 ### A integração com o google foi realizada por javascript, talvez por algum motivo pode ser necessário trocar.
